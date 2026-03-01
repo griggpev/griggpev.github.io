@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evan Angelone — Mathematics</title>
+  <style>
+    @font-face {
+      font-family: 'GT Sectra Display';
+      src: url('fonts/GT-Sectra-LG-Display-Regular.otf') format('opentype');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'GT Sectra Paper';
+      src: url('fonts/GT-Sectra-LG-Fine-Book.otf') format('opentype');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'National 2';
+      src: url('fonts/National 2 Light.otf') format('opentype');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'National 2 Narrow';
+      src: url('fonts/National 2 Narrow Medium.otf') format('opentype');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'TT2020';
+      src: url('fonts/TT2020Base-Regular.ttf') format('truetype');
+      font-weight: 400;
+    }
+
+    :root {
+      /* Reed Primary */
+      --ink: #000000;
+      --paper: #FFFFFF;
+      --ReedRed: #A70E16;
+
+      /* Reed Secondary */
+      --CanyonFern: #7E8A65;
+      --GoldenLaurel: #BF995D;
+      --No2Pencil: #FFC846;
+      --Parchment: #FFF7E9;
+      --ReactorCore: #DFE7E7;
+      --BlueBridge: #3F6574;
+      --Newsprint: #ECEAE4;
+      --Adirondack: #E84A37;
+
+      /* GriffinGrey family */
+      --GriffinGrey: #F3F3F2;
+      --GriffinGreyHeader: #4B4C4D;
+      --GriffinGreyBold: #231E20;
+
+      /* Semantic mappings */
+      --accent: var(--ReedRed);
+      --accent-light: var(--No2Pencil);
+      --muted: var(--GriffinGreyHeader);
+      --rule: #d4d0cb;
+      --card-bg: var(--GriffinGrey);
+      --urlblue: #185D9E;
+
+      --serif-display: 'GT Sectra Display', Georgia, serif;
+      --serif-paper: 'GT Sectra Paper', Georgia, serif;
+      --sansbold: 'National 2 Narrow', sans-serif;
+      --sans: 'National 2', 'Segoe UI', sans-serif;
+      --mono: 'TT2020', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    ::selection { background: var(--ReedRed); color: var(--paper); }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.25s ease;
+    }
+    a:hover { border-bottom-color: var(--accent); }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: var(--BlueBridge);
+    }
+    nav .nav-inner {
+      max-width: 960px; margin: 0 auto; padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between; height: 56px;
+    }
+    nav .nav-name {
+      font-family: var(--serif-display); font-size: 1.15rem; font-weight: 600;
+      color: #FFFFFF; letter-spacing: -0.01em;
+    }
+    nav .nav-links { display: flex; gap: 1.75rem; }
+    nav .nav-links a {
+      font-size: 0.85rem; font-weight: 500; color: rgba(255, 255, 255, 0.8);
+      text-transform: uppercase; letter-spacing: 0.08em; border: none; transition: color 0.25s;
+    }
+    nav .nav-links a:hover { color: #FFFFFF; }
+
+    .hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      width: 28px; height: 20px; position: relative;
+    }
+    .hamburger span {
+      display: block; width: 100%; height: 2px; background: #FFFFFF;
+      position: absolute; left: 0; transition: all 0.3s ease;
+    }
+    .hamburger span:nth-child(1) { top: 0; }
+    .hamburger span:nth-child(2) { top: 9px; }
+    .hamburger span:nth-child(3) { top: 18px; }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 10rem 2rem 5rem; max-width: 960px; margin: 0 auto;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr clamp(140px, 20vw, 240px); gap: 3rem; align-items: start;
+    }
+    .hero h1 {
+      font-family: var(--serif-display); font-size: 3rem; font-weight: 300;
+      line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 0.5rem;
+    }
+    .hero h1 span { color: var(--ReedRed); font-weight: 600; }
+    .hero .subtitle {
+      font-size: 1.15rem; color: var(--muted); margin-bottom: 1.5rem; font-weight: 300;
+    }
+    .hero .intro { max-width: 540px; color: var(--ink); }
+    .hero .photo-placeholder {
+      width: 220px; height: 280px; border-radius: 6px; background: var(--card-bg);
+      border: 2px dashed var(--rule); display: flex; align-items: center;
+      justify-content: center; font-size: 0.8rem; color: var(--muted);
+      text-align: center; padding: 1rem; line-height: 1.4;
+    }
+    .hero .photo {
+      width: 100%;
+      border-radius: 6px;
+      object-fit: cover;
+      aspect-ratio: 3 / 4;
+    }
+
+    /* ─── SECTIONS ─── */
+    section {
+      max-width: 960px; margin: 0 auto; padding: 4rem 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .section-rule { border: none; border-top: 1px solid var(--rule); margin-bottom: 3rem; }
+    .section-label {
+      font-family: var(--sansbold);
+      font-size: 1rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.3em; color: var(--accent); margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-family: var(--serif-display); font-size: 2rem; font-weight: 300;
+      margin-bottom: 1.75rem; letter-spacing: -0.01em;
+      color: var(--GriffinGreyHeader);
+    }
+
+    /* ─── RESEARCH ─── */
+    .paper-list { list-style: none; }
+    .paper-list li { padding: 1.25rem 0; border-bottom: 1px solid var(--rule); }
+    .paper-list li:last-child { border-bottom: none; }
+    .paper-title {
+      font-family: var(--serif-paper); font-size: 1.15rem; font-weight: 600;
+      margin-bottom: 0.25rem; color: var(--GriffinGreyBold);
+    }
+    .paper-meta { font-size: 0.88rem; color: var(--muted); }
+    .paper-meta .tag {
+      display: inline-block; font-family: var(--mono); font-size: 0.72rem;
+      background: var(--card-bg); color: var(--accent); padding: 0.15rem 0.5rem;
+      border-radius: 3px; margin-left: 0.5rem; vertical-align: middle;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .paper-meta a.tag:hover {
+      background: var(--accent); color: #FFFFFF; border-bottom-color: transparent;
+    }
+    .paper-abstract { margin-top: 0.5rem; font-size: 0.92rem; color: var(--muted); max-width: 680px; }
+
+    /* ─── DISSERTATION TIMELINE ─── */
+    .dissertation-timeline {
+      position: relative;
+      display: flex; flex-direction: column;
+      margin-left: 0.5rem;
+    }
+    .dissertation-timeline::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; background: var(--rule);
+    }
+    .dissertation-timeline::after {
+      content: ''; position: absolute; left: 0; top: 0;
+      width: 3px; background: var(--CanyonFern);
+      height: 33%;
+    }
+    .diss-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1.25rem 0 1.25rem 1.5rem; position: relative;
+    }
+    .diss-item::before {
+      content: ''; position: absolute; left: -5.5px; top: 1.65rem;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--rule); border: 2px solid var(--paper);
+      z-index: 1;
+    }
+    .diss-item.complete::before { background: var(--CanyonFern); }
+    .diss-item.in-progress::before { background: var(--No2Pencil); }
+    .diss-status {
+      font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase;
+      padding: 0.15rem 0.55rem; border-radius: 3px; white-space: nowrap;
+      flex-shrink: 0; margin-top: 0.15rem;
+    }
+    .diss-status.pending { background: var(--Newsprint); color: var(--GriffinGreyHeader); }
+    .diss-status.complete { background: var(--CanyonFern); color: white; }
+    .diss-status.in-progress { background: var(--No2Pencil); color: var(--GriffinGreyBold); }
+    .diss-content h3 {
+      font-family: var(--serif-display); font-size: 1.05rem; font-weight: 600; margin-bottom: 0.25rem;
+    }
+    .diss-content p { font-size: 0.88rem; color: var(--muted); }
+    .diss-link-disabled { color: var(--rule) !important; pointer-events: none; }
+
+    /* ─── TEACHING ─── */
+    .program-block { margin-bottom: 2.5rem; }
+    .program-block:last-child { margin-bottom: 0; }
+    .program-block h3 {
+      font-family: var(--serif-display); font-size: 1.25rem; font-weight: 600;
+      color: var(--GriffinGreyBold); margin-bottom: 1rem;
+    }
+    .mentee-list { list-style: none; }
+    .mentee-list li {
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--rule);
+      display: flex; flex-wrap: wrap; gap: 0.25rem 0;
+    }
+    .mentee-list li:last-child { border-bottom: none; }
+    .mentee-topic {
+      font-family: var(--serif-paper);
+      color: var(--GriffinGreyBold);
+      font-weight: 600;
+      font-size: 1rem;
+      width: 100%;
+      margin-bottom: 0.15rem;
+    }
+    .mentee-info {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .mentee-info .semester {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      background: var(--card-bg);
+      padding: 0.1rem 0.45rem;
+      border-radius: 3px;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+
+    /* ─── CV ─── */
+    .download-row { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start; }
+    .download-item { display: flex; flex-direction: column; }
+    .download-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.5rem; background: var(--ink); color: var(--paper);
+      border-radius: 6px; font-size: 0.9rem; font-weight: 500;
+      border: none; transition: background 0.25s ease;
+    }
+    .download-btn:hover { background: var(--accent); border-bottom-color: transparent; color: white; }
+    .download-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+    /* ─── CONTACT ─── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .contact-info p { margin-bottom: 0.6rem; }
+    .contact-info .label {
+      font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--muted);
+    }
+    .contact-info .email-link {
+      font-family: var(--mono);
+      color: var(--urlblue);
+    }
+    .contact-info .email-link:hover {
+      border-bottom-color: var(--urlblue);
+    }
+    .office-card { background: var(--card-bg); border-radius: 8px; padding: 1.5rem; }
+    .office-card h3 { font-family: var(--serif-display); font-weight: 600; margin-bottom: 0.75rem; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      width: 100%; padding: 2rem;
+      background: var(--BlueBridge); color: rgba(255, 255, 255, 0.85);
+      font-size: 0.82rem;
+      display: flex; justify-content: center; align-items: center;
+    }
+    footer a { color: rgba(255, 255, 255, 0.85); }
+    footer a:hover { color: #FFFFFF; border-bottom-color: #FFFFFF; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+    .stagger-5 { animation-delay: 0.5s; }
+
+    @media (max-width: 700px) {
+      .hero { padding: 7rem 1.25rem 3rem; }
+      .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-grid .photo-placeholder { order: -1; width: 160px; height: 200px; }
+      .hero h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.6rem; }
+      section { padding: 3rem 1.25rem; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .nav-links {
+        display: none !important; flex-direction: column; position: absolute;
+        top: 56px; left: 0; right: 0; background: var(--BlueBridge);
+        padding: 1rem 2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.2); gap: 1rem;
+      }
+      .nav-links.open { display: flex !important; }
+      .hamburger { display: block; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-name">Evan Angelone</span>
+    <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links">
+      <a href="#research">Research</a>
+      <a href="#teaching">Teaching</a>
+      <a href="#cv">CV</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-grid">
+    <div>
+      <h1>Evan <span>Angelone</span></h1>
+      <p class="subtitle">Mathematics PhD Student &middot; Northeastern University</p>
+      <p class="intro">
+        I am a PhD student in the Department of Mathematics at Northeastern University, advised by Egon Schulte. My primary research area is in discrete geometry, with a focus on abstract polytopes and the classification of certain chiral automorphism groups, as well as the combinatorics of families of convex polytopes. Previously, I received an AS in Mathematics from Raritan Valley Community College in 2018 as a first-generation college student. After graduating from RVCC, I went on to earn a BA in Mathematics from Reed College in 2021 where I was advised by Jamie Pommersheim, under whom I wrote my year-long senior thesis.
+      </p>
+    </div>
+    <img src="photo.jpg" alt="Evan Angelone" class="photo">
+  </div>
+</header>
+
+<!-- RESEARCH -->
+<section id="research" class="stagger-1">
+  <hr class="section-rule">
+  <div class="section-label">Research</div>
+  <h2>Papers &amp; Preprints</h2>
+  <ul class="paper-list">
+    <li>
+      <div class="paper-title">Chiral polyhedra from \(\mathrm{AGL}(1, q)\)</div>
+      <div class="paper-meta">
+        with Egon Schulte &mdash; Submitted, 2025
+      </div>
+    </li>
+    <li>
+      <div class="paper-title">Cops and robbers on chess graphs</div>
+      <div class="paper-meta">with Sally Ambrose, Jacob Chen, Daniel Ma, Arturo Ortiz San Miguel, Wraven Watanabe, Stephen Whitcomb, and Shanghao Wu &mdash; <em>preprint</em> <a href="https://arxiv.org/abs/2509.18516" class="tag">arXiv:2509.18516</a></div>
+    </li>
+    <li>
+      <div class="paper-title">Burning games on strong path products</div>
+      <div class="paper-meta">with Sally Ambrose, Jacob Chen, Daniel Ma, Arturo Ortiz San Miguel, Wraven Watanabe, Stephen Whitcomb, and Shanghao Wu &mdash; <em>preprint</em> <a href="https://arxiv.org/abs/2509.20572" class="tag">arXiv:2509.20572</a></div>
+    </li>
+    <li>
+      <div class="paper-title">Cyclic cones &amp; non-singular refinements of cyclic normal fans</div>
+      <div class="paper-meta">BA Thesis, Reed College, 2021</div>
+    </li>
+  </ul>
+
+  <!-- Dissertation Progress -->
+  <div style="margin-top: 3rem;">
+    <h2>Dissertation Progress</h2>
+    <p style="margin-bottom: 1.5rem; max-width: 680px;">
+      Tracking my path toward defense. Proposal documents will be posted here as they become available.
+    </p>
+    <div class="dissertation-timeline">
+      <div class="diss-item complete">
+        <div class="diss-status complete">Complete</div>
+        <div class="diss-content">
+          <h3><a href="files/3-page.pdf">3-Page Proposal</a></h3>
+          <p>Initial dissertation topic overview and research direction.</p>
+        </div>
+      </div>
+      <div class="diss-item in-progress">
+        <div class="diss-status in-progress">In-progress</div>
+        <div class="diss-content">
+          <h3>10-Page Proposal</h3>
+          <p>Expanded proposal with literature review, methodology, and preliminary results.</p>
+          <a href="#" class="note-link diss-link-disabled">PDF available soon</a>
+        </div>
+      </div>
+      <div class="diss-item">
+        <div class="diss-status pending">upcoming</div>
+        <div class="diss-content">
+          <h3>Candidacy</h3>
+          <p>Advancement to PhD candidacy.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEACHING -->
+<section id="teaching" class="stagger-2">
+  <hr class="section-rule">
+  <div class="section-label">Teaching</div>
+
+  <div class="program-block">
+    <h3>Directed Reading Program</h3>
+    <ul class="mentee-list">
+      <li>
+        <div class="mentee-topic">Delayed burning on weak path products &dagger;</div>
+        <div class="mentee-info">
+          Cassie Chaluja, Maverick Donald-Wright, Swara Kadam, Ananya Suresh
+          <span class="semester">Spring 2026</span>
+        </div>
+      </li>
+      <li>
+        <div class="mentee-topic">Skeletal and chiral polyhedral complexes &Dagger;</div>
+        <div class="mentee-info">
+          Rosalind Chang, Prithika Sriya Sankar, Daniel Suit
+          <span class="semester">Spring 2026</span>
+        </div>
+      </li>
+      <li>
+        <div class="mentee-topic">Abstract regular polytopes</div>
+        <div class="mentee-info">
+          Anna Casarino, Rob Patterson
+          <span class="semester">Spring 2025</span>
+        </div>
+      </li>
+      <li>
+        <div class="mentee-topic">Manifolds and differential forms</div>
+        <div class="mentee-info">
+          Ajay George, Candice Medina
+          <span class="semester">Spring 2024</span>
+        </div>
+      </li>
+      <li>
+        <div class="mentee-topic">Ehrhart polynomials of polytopes</div>
+        <div class="mentee-info">
+          JP Norton, Jack Oehling, Jiaqi Wang
+          <span class="semester">Fall 2023</span>
+        </div>
+      </li>
+      <li>
+        <div class="mentee-topic">Geometry of cyclic polytopes</div>
+        <div class="mentee-info">
+          Tim Avitabile, Ryan Kelso, Dan Kiem
+          <span class="semester">Spring 2023</span>
+        </div>
+      </li>
+    </ul>
+    <p style="font-size: 0.78rem; color: var(--muted); margin-top: 0.75rem;">
+      &dagger; Co-mentored with Arturo Ortiz San Miguel &ensp;&middot;&ensp; &Dagger; Co-mentored with Mei-Yu Huang
+    </p>
+  </div>
+
+  <div class="program-block">
+    <h3>Northeastern Summer Mathematics Research Program</h3>
+    <ul class="mentee-list">
+    	<li>
+        <div class="mentee-topic">Delayed burning on vertex transitive graphs &dagger;</div>
+        <div class="mentee-info">
+          <em>To be announced</em>
+          <span class="semester">Summer 2026</span>
+        </div>
+      </li>
+      <li>
+        <div class="mentee-topic">Cops and robbers on chess graphs &dagger;</div>
+        <div class="mentee-info">
+          Sally Ambrose, Jacob Chen, Daniel Ma, Wraven Watanabe, Stephen Whitcomb, Shanghao Wu
+          <span class="semester">Summer 2025</span>
+        </div>
+      </li>
+    </ul>
+    <p style="font-size: 0.78rem; color: var(--muted); margin-top: 0.75rem;">
+      &dagger; Co-mentored with Arturo Ortiz San Miguel
+    </p>
+  </div>
+</section>
+
+<!-- CV -->
+<section id="cv" class="stagger-3">
+  <hr class="section-rule">
+  <div class="section-label">Documents</div>
+  <div class="download-row" style="margin-top: 1rem;">
+    <div class="download-item">
+      <a href="files/Resume and curriculum vitae/CV/Evan_Angelone_CV.pdf" class="download-btn">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zm-2 12v-4h2v4h3l-4 4-4-4h3z"/></svg>
+        Curriculum Vit&aelig; (PDF)
+      </a>
+    </div>
+    <div class="download-item">
+      <a href="files/Resume and curriculum vitae/Resume/Evan_Angelone_resume.pdf" class="download-btn">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zm-2 12v-4h2v4h3l-4 4-4-4h3z"/></svg>
+        R&eacute;sum&eacute; (PDF)
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="stagger-4">
+  <hr class="section-rule">
+  <div class="section-label">Contact</div>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p class="label">Email</p>
+      <p><a href="mailto:griggs.e@northeastern.edu" class="email-link">griggs.e@northeastern.edu</a></p>
+    </div>
+    <div class="office-card">
+      <h3>Office</h3>
+      <p>
+        Lake Hall 567<br>
+        Department of Mathematics<br>
+        Northeastern University<br>
+        Boston, MA  02115
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>&copy; 2026 Evan Angelone</span>
+</footer>
+
+</body>
+</html>
