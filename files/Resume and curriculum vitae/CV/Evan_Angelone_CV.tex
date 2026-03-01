@@ -1,0 +1,27 @@
+\documentclass[11pt]{article}
+
+\input{preamble}
+
+\setmainfont{National 2 Regular}
+
+\makeatletter
+\newcommand{\globalcolor}[1]{%
+  \color{#1}\global\let\default@color\current@color
+}
+\makeatother
+
+\AtBeginDocument{\globalcolor{GriffinGreyText}}
+
+%\pagecolor{Eggshell}
+
+\begin{document}
+	\input{header}
+	\input{contact_info}
+	\input{education}
+	\input{talks}
+	\input{papers}
+	\input{teaching}
+	\input{service}
+	\input{awards}
+%	\input{misc}
+\end{document}
