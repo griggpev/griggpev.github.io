@@ -4,11 +4,18 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="Evan Angelone, Evan Griggs, mathematics, Northeastern University">
+	<meta name="description" content="Evan Angelone (formerly Evan Griggs) — Mathematics PhD student at Northeastern University">
   <title>Evan Angelone — Mathematics</title>
   <style>
 	@font-face {
 	  font-family: 'GT Sectra Display';
 	  src: url('fonts/GT-Sectra-LG-Display-Regular.otf') format('opentype');
+	  font-weight: 400;
+	}
+		@font-face {
+	  font-family: 'GT Sectra Display Bold';
+	  src: url('fonts/GT-Sectra-LG-Display-Medium.otf') format('opentype');
 	  font-weight: 400;
 	}
 	@font-face {
@@ -100,7 +107,7 @@
 	  display: flex; align-items: center; justify-content: space-between; height: 56px;
 	}
 	nav .nav-name {
-	  font-family: var(--serif-display); font-size: 1.15rem; font-weight: 600;
+	  font-family: var(--serif-display); font-size: 1.15rem; font-weight: 400;
 	  color: #FFFFFF; letter-spacing: -0.01em;
 	}
 	nav .nav-links { display: flex; gap: 1.75rem; }
@@ -134,7 +141,7 @@
 	  font-family: var(--serif-display); font-size: 3rem; font-weight: 300;
 	  line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 0.5rem;
 	}
-	.hero h1 span { color: var(--ReedRed); font-weight: 600; }
+	.hero h1 span { color: var(--ReedRed); font-weight: 400; font-family: 'GT Sectra Display Bold'; }
 	.hero .subtitle {
 	  font-size: 1.15rem; color: var(--muted); margin-bottom: 1.5rem; font-weight: 300;
 	}
@@ -160,7 +167,7 @@
 	.section-rule { border: none; border-top: 1px solid var(--rule); margin-bottom: 3rem; }
 	.section-label {
 	  font-family: var(--sansbold);
-	  font-size: 1rem; font-weight: 600; text-transform: uppercase;
+	  font-size: 1rem; font-weight: 400; text-transform: uppercase;
 	  letter-spacing: 0.3em; color: var(--accent); margin-bottom: 0.5rem;
 	}
 	h2 {
@@ -179,7 +186,7 @@
 	}
 	.paper-meta { font-size: 0.88rem; color: var(--muted); }
 	.paper-meta .tag {
-	  display: inline-block; font-family: var(--mono); font-size: 0.72rem;
+	  display: inline-block; font-family: var(--sans); font-size: 0.72rem;
 	  background: var(--card-bg); color: var(--accent); padding: 0.15rem 0.5rem;
 	  border-radius: 3px; margin-left: 0.5rem; vertical-align: middle;
 	  transition: background 0.2s ease, color 0.2s ease;
@@ -257,7 +264,8 @@
 	  color: var(--muted);
 	}
 	.mentee-info .semester {
-	  font-family: var(--mono);
+	  font-family: var(--sans);
+	  color: var(--muted);
 	  font-size: 0.75rem;
 	  background: var(--card-bg);
 	  padding: 0.1rem 0.45rem;
@@ -345,7 +353,7 @@
 	</button>
 	<div class="nav-links">
 	  <a href="#research">Research</a>
-	  <a href="#teaching">Teaching</a>
+	  <a href="#mentorship">Mentorship</a>
 	  <a href="#cv">CV</a>
 	  <a href="#contact">Contact</a>
 	</div>
@@ -374,7 +382,7 @@
 	<li>
 	  <div class="paper-title">Chiral polyhedra from \(\mathsf{AGL}(1, q)\)</div>
 	  <div class="paper-meta">
-		with Egon Schulte &mdash; submitted, 2025
+		with Egon Schulte &mdash; submitted, 2025 <a href="https://arxiv.org/abs/2603.02543" class="tag">arXiv:2603.02543</a>
 	  </div>
 	</li>
 	<li>
@@ -390,8 +398,10 @@
 	  <div class="paper-meta">BA Thesis, Reed College &mdash; 2021</div>
 	</li>
   </ul>
+</section>
 
-  <!-- Dissertation Materials -->
+<!--
+
   <div style="margin-top: 3rem;">
 	<h2>Dissertation Materials</h2>
 	<div>
@@ -415,11 +425,12 @@
 	</ul>
   </div>
 </section>
+-->
 
-<!-- TEACHING -->
-<section id="teaching" class="stagger-2">
+<!-- Mentorship -->
+<section id="mentorship" class="stagger-2">
   <hr class="section-rule">
-  <div class="section-label">Teaching</div>
+  <div class="section-label">Mentorship</div>
 
   <div class="program-block">
 	<h3>Directed Reading Program</h3>
@@ -524,11 +535,12 @@
 	<div class="contact-info">
 	  <p class="label">Email</p>
 	  <p><a href="mailto:griggs.e@northeastern.edu" class="email-link">griggs.e@northeastern.edu</a></p>
+	  <a href="mailto:epangelone@icloud.com" class="email-link">epangelone@icloud.com</a>
 	</div>
 	<div class="office-card">
 	  <h3>Office</h3>
 	  <p>
-		Lake Hall 563<br>
+		Lake Hall 567<br>
 		Department of Mathematics<br>
 		Northeastern University<br>
 		Boston, MA  02115
