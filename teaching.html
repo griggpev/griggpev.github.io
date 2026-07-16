@@ -1,137 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teaching — Evan Angelone</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Teaching — Evan Angelone</title>
+		<link rel="stylesheet" href="style.css">
+		<script src="theme-toggle.js"></script>
+	</head>
+	<body>
+		<nav>
+			<div class="nav-inner">
+				<a href="index.html" class="nav-name" aria-label="Home">
+					<span class="icon-wrap"><svg class="icon-default" viewBox="0 0 512 512" aria-hidden="true"><g id="Outline"><g id="Outline-2" data-name="Outline"><path d="M504.675,255.505,483.211,154.468a102.9,102.9,0,0,0-29.571-53.116L408.15,57.758A103.444,103.444,0,0,0,361.238,32L258.952,6.963a103.013,103.013,0,0,0-85.945,17.254L100.982,77.429A103.254,103.254,0,0,0,80,98.165L25.562,170.08a102.95,102.95,0,0,0-18.1,86.382l23.875,99.805a103.243,103.243,0,0,0,27.422,49.011l46.033,46.033a103.477,103.477,0,0,0,50.052,27.665l98.333,22.449a103.542,103.542,0,0,0,82.108-16l75.783-52.885A83.214,83.214,0,0,0,435.41,408.7l51.681-70.861A103.438,103.438,0,0,0,504.675,255.505ZM108.112,87.081l72.026-53.213a91.62,91.62,0,0,1,16.829-9.843l-6.442,14.634a6,6,0,0,0,10.984,4.834l10.93-24.832a91.072,91.072,0,0,1,43.66-.042L358.385,43.658a91.29,91.29,0,0,1,20.067,7.512l-9.589,100.676-16.321,3.264,3.583-19.181a8.878,8.878,0,0,0-4.4-9.1L322.384,112.2a6,6,0,1,0-5.283,10.775l26.782,13.135-4.023,21.537L201.686,185.282,132.1,119.206l8.119-7.916a6,6,0,1,0-8.377-8.592l-8.45,8.239L102.769,91.353Q105.358,89.123,108.112,87.081ZM355.178,363.153l20.11,19.407-58.5,58.9-153-75.642,6.031-24.875a6.022,6.022,0,0,0,7,6.036l29.574-5.035a6,6,0,1,0-2.013-11.83l-29.575,5.035a5.988,5.988,0,0,0-4.382,3.289l34.31-141.528,166.153-33.231,68.893,153.943-56.04,56.424-20.234-19.527a6,6,0,1,0-8.334,8.635ZM43,353.475,19.129,253.67A91.108,91.108,0,0,1,20.1,207.4a5.957,5.957,0,0,0,4.129-.31L51.237,194.78l3.51,7.293a6,6,0,0,0,10.813-5.2L59.5,184.279a6,6,0,0,0-8.008-2.805c-.865.416-26.1,11.9-26.1,11.9a91.8,91.8,0,0,1,9.741-16.052L89.57,105.408c1.471-1.944,3.025-3.817,4.642-5.632l20.582,19.544-4.431,4.321a6,6,0,1,0,8.377,8.591l4.762-4.643,69.66,66.147L151.99,363.566,51.01,374.746A91.262,91.262,0,0,1,43,353.475Zm252.93,136.359a91.343,91.343,0,0,1-40.09-.108l-98.333-22.45a91.28,91.28,0,0,1-22.454-8.36l.675-26.348a6,6,0,0,0-12-.307l-.492,19.186a91.586,91.586,0,0,1-9.971-8.621L67.24,396.792a91.388,91.388,0,0,1-9.187-10.753l67.059-7.424-.607,23.656a6,6,0,0,0,5.845,6.151c.052,0,.1,0,.156,0a6,6,0,0,0,6-5.846l.65-25.3,18.592-2.058,154.71,76.49ZM477.4,330.77l-51.681,70.86a91.68,91.68,0,0,1-5.888,7.235l-13.141-12.681a6,6,0,1,0-8.334,8.634l12.878,12.429c-2.252,1.923-4.59,3.752-7.033,5.456l-75.783,52.885a91.028,91.028,0,0,1-17.909,9.707l12.652-33.219L450.176,324.188l37.773-12.222A91.162,91.162,0,0,1,477.4,330.77Zm15.089-32.885L450.22,311.561,380.536,155.849l1.788-18.777,24.142-1.264a6,6,0,1,0-.627-11.983L383.474,125l6.368-66.863a91.2,91.2,0,0,1,10.006,8.289l45.489,43.594a91.666,91.666,0,0,1,9.925,11.221L435.8,122.256a6,6,0,1,0,.627,11.983l26.245-1.374a91.273,91.273,0,0,1,8.8,24.1L492.937,258A91.314,91.314,0,0,1,492.485,297.885Z"/><path d="M161.7,90.347,183.181,69.4a6,6,0,1,0-8.377-8.591l-21.48,20.942a6,6,0,1,0,8.377,8.592Z"/><path d="M75.78,174.119l21.48-20.943a6,6,0,1,0-8.377-8.592L67.4,165.527a6,6,0,0,0,8.377,8.592Z"/><path d="M263.229,96.555l26.936,13.21a6,6,0,0,0,5.283-10.774l-26.935-13.21a6,6,0,0,0-5.284,10.774Z"/><path d="M209.359,70.136l26.935,13.21a6,6,0,0,0,5.285-10.775L214.643,59.362a6,6,0,0,0-5.284,10.774Z"/><path d="M152.159,345.091a6,6,0,0,0-6.922-4.908l-9.907,1.687-4.732-9.833a6,6,0,1,0-10.813,5.2l6.69,13.9a6.01,6.01,0,0,0,6.414,3.313l14.362-2.445A6,6,0,0,0,152.159,345.091Z"/><path d="M78.567,223.9a6,6,0,1,0-10.813,5.2L80.762,256.14a6,6,0,0,0,10.813-5.2Z"/><path d="M104.583,277.97a6,6,0,0,0-10.814,5.2l13.008,27.033A6,6,0,1,0,117.59,305Z"/><path d="M263.535,320.044l-29.574,5.035a6,6,0,0,0,2.014,11.83l29.574-5.035a6,6,0,0,0-2.014-11.83Z"/><path d="M340.7,185.813a6,6,0,0,0-7,4.8L328.2,220.1a6,6,0,0,0,11.8,2.2l5.508-29.49A6,6,0,0,0,340.7,185.813Z"/><path d="M321.978,286.079a6.012,6.012,0,0,0,7-4.8l5.507-29.49a6,6,0,0,0-11.8-2.2l-5.507,29.49A6,6,0,0,0,321.978,286.079Z"/><path d="M322.662,315.1l.808-4.324a6,6,0,0,0-11.8-2.2l-.632,3.388-17.931,3.052a6,6,0,0,0,2.014,11.83l19.063-3.245,19.4,18.726a6,6,0,0,0,8.334-8.635Z"/></g></g></svg><svg class="icon-hover" viewBox="0 0 512 512" aria-hidden="true"><g id="Solid"><g id="Solid-2" data-name="Solid"><path d="M495.871,257.375,474.407,156.338a94.168,94.168,0,0,0-10-26.568c-.169,0-28.152,1.484-28.3,1.478a3,3,0,0,1-.155-6l24.9-1.3a94.545,94.545,0,0,0-13.445-16.1L401.923,64.256a94.307,94.307,0,0,0-14.587-11.448l-7.178,75.365L406,126.82a3,3,0,0,1,.315,5.993l-26.727,1.4-2.108,22.14,71.107,158.892L495,300.225A94.314,94.314,0,0,0,495.871,257.375Z"/><path d="M52.726,383.611a94.289,94.289,0,0,0,12.393,15.3l46.033,46.033A94.355,94.355,0,0,0,126.1,457.106l.635-24.768a3,3,0,0,1,6,.153l-.723,28.2a94.259,94.259,0,0,0,24.833,9.514l98.333,22.45a94.369,94.369,0,0,0,43-.262l16.057-42.156L156.285,372.146l-22.066,2.443L133.5,402.5a3,3,0,1,1-6-.154l.7-27.092Z"/><path d="M320.579,450.415l-15.214,39.946a94.148,94.148,0,0,0,24.766-12.312c6.064-4.592,82.667-56.718,85.523-60.7L400.436,402.66a3,3,0,1,1,4.166-4.318l15.344,14.808c4.538-3.339,54.938-74.363,59.874-80.612A94.21,94.21,0,0,0,492.934,307.2l-44.373,14.358Z"/><path d="M61.454,202.174a3,3,0,0,1-4-1.4l-5.442-11.309a2.985,2.985,0,0,1-1.73,2.456l-27.3,12.445a3.018,3.018,0,0,1-4.242-2.631,94.029,94.029,0,0,0-2.527,52.635l23.875,99.805a94.277,94.277,0,0,0,9.24,23.777L154.41,366.316l42.076-173.56-73.011-69.33-6.829,6.658a3,3,0,1,1-4.188-4.3l6.663-6.5L94.067,95.5c-1.952.658-58.04,75.992-61.329,80.01a94.547,94.547,0,0,0-13.26,24.157,2.971,2.971,0,0,1,1.013-.764l27.3-12.444a3,3,0,0,1,3.309.558,3.008,3.008,0,0,1,5.7-1.438l6.058,12.59A3,3,0,0,1,61.454,202.174Zm62.437,129.761a3,3,0,0,1,4,1.4l5.71,11.87,12.136-2.066a3,3,0,0,1,1.006,5.915L132.385,351.5a3,3,0,0,1-3.206-1.656l-6.691-13.9A3,3,0,0,1,123.891,331.935ZM87.469,256.241a3,3,0,0,1-4-1.4L70.458,227.806a3,3,0,1,1,5.406-2.6l13.008,27.033A3,3,0,0,1,87.469,256.241Zm10.406,21.627a3,3,0,0,1,4,1.4L114.887,306.3a3,3,0,1,1-5.407,2.6L96.473,281.872A3,3,0,0,1,97.875,277.868ZM69.5,167.675l21.48-20.943a3,3,0,0,1,4.188,4.3l-21.48,20.943a3,3,0,1,1-4.188-4.3Z"/><path d="M202.275,194.342l-41.964,173.1L317.4,445.106l62.293-62.719a2.968,2.968,0,0,1-.839-.56l-21.587-20.833a3,3,0,1,1,4.166-4.317l21.587,20.832a2.982,2.982,0,0,1,.629.895l59.721-60.13L372.653,160.266ZM320.13,279.63l5.508-29.49a3,3,0,0,1,5.9,1.1l-5.508,29.489A3,3,0,0,1,320.13,279.63ZM205.9,338.986l-29.575,5.035a3.124,3.124,0,0,1-.507.042,3,3,0,0,1-.5-5.958l29.574-5.034A3,3,0,0,1,205.9,338.986Zm59.149-10.069-29.575,5.034a3,3,0,1,1-1.007-5.915L264.038,323A3,3,0,0,1,265.046,328.917Zm74.871,11.169a3,3,0,0,1-4.242.075l-20.5-19.779-20.558,3.5a3,3,0,0,1-1.008-5.915l19.992-3.4,1.017-5.443a3,3,0,0,1,5.9,1.1l-1.1,5.911,20.424,19.711A3,3,0,0,1,339.917,340.086Zm2.635-147.825-5.508,29.49a3,3,0,0,1-5.9-1.1l5.507-29.49A3,3,0,0,1,342.552,192.261Z"/><path d="M98.34,91.285,123.42,115.1l10.518-10.254a3,3,0,1,1,4.188,4.3l-10.352,10.093,72.974,69.294,141.689-28.338,4.947-26.484a2.943,2.943,0,0,1-2.029-.216l-26.934-13.21a3,3,0,0,1,2.642-5.387L348,128.1a2.982,2.982,0,0,1,1.544,1.834,3.011,3.011,0,0,1,4.025,3.343l-4.789,25.641,22.86-4.571,2.034-21.36a2.991,2.991,0,0,1,.35-3.666l7.606-79.869A94.314,94.314,0,0,0,359.1,40.744L256.812,15.705a93.936,93.936,0,0,0-46.537.424L198.763,42.284a3,3,0,1,1-5.491-2.417l9.411-21.381a94.429,94.429,0,0,0-24.328,12.97C174.629,34.437,98.565,89.759,98.34,91.285Zm164.838-1.438a3,3,0,0,1,4.014-1.372l26.936,13.21a3,3,0,1,1-2.643,5.386L264.55,93.861A3,3,0,0,1,263.178,89.847Zm-53.87-26.419a3,3,0,0,1,4.014-1.372l26.935,13.209a3,3,0,0,1-2.641,5.387L210.68,67.442A3,3,0,0,1,209.308,63.428ZM155.418,83.9,176.9,62.96a3,3,0,0,1,4.189,4.3L159.606,88.2a3,3,0,1,1-4.188-4.3Z"/></g></g></svg></span>
+				</a>
+				<button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
+				<div class="nav-links">
+					<a href="research.html">Research</a>
+					<a href="teaching.html" class="active">Teaching</a>
+					<a href="bio.html">Bio</a>
+					<a href="cv.html">CV</a>
+					<a href="resources.html">Resources</a>
+				</div>
+			</div>
+		</nav>
 
-  <nav>
-    <div class="nav-inner">
-      <a href="index.html" class="nav-name">Evan Angelone</a>
-      <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-      <div class="nav-links">
-        <a href="research.html">Research</a>
-        <a href="teaching.html" class="active">Teaching</a>
-        <a href="cv.html">CV</a>
-      </div>
-    </div>
-  </nav>
+		<header class="page-header">
+			<div class="section-label">Teaching</div>
+		</header>
 
-  <header class="page-header">
-    <div class="section-label">Teaching</div>
-  </header>
+		<section>
+			<details class="collapsible">
+				<summary><h2>Courses</h2></summary>
+				<ul class="course-list">
+					<li>
+						<div class="course-name">MATH 1365 &mdash; Introduction to Mathematical Reasoning <span class="tag-group"><span class="course-detail">Fall 2026</span><span class="role-badge">Instructor of record</span></span></div>
+					</li>
+					<li>
+						<div class="course-name">MATH 1342 &mdash; Calculus II for Science/Engineering <span class="tag-group"><span class="course-detail">Spring 2026</span></span></div>
+						<div class="course-info">2 sections</div>
+					</li>
+					<li>
+						<div class="course-name">MATH 1341 &mdash; Calculus I for Science/Engineering <span class="tag-group"><span class="course-detail">Fall 2025</span></span></div>
+					</li>
+					<li>
+						<div class="course-name">MATH 1342 &mdash; Calculus II for Science/Engineering <span class="tag-group"><span class="course-detail">Spring 2025</span></span></div>
+						<div class="course-info">3 sections</div>
+					</li>
+					<li>
+						<div class="course-name">MATH 1231 &mdash; Calculus for Business/Economics <span class="tag-group"><span class="course-detail">Fall 2024</span></span></div>
+						<div class="course-info">3 sections</div>
+					</li>
+					<li>
+						<div class="course-name">MATH 2341 &mdash; Differential Equations &amp; Linear Algebra for Engineers <span class="tag-group"><span class="course-detail">Summer 2024</span></span></div>
+					</li>
+					<li>
+						<div class="course-name">MATH 1342 &mdash; Calculus II for Science/Engineering <span class="tag-group"><span class="course-detail">Spring 2024</span></span></div>
+						<div class="course-info">2 sections</div>
+					</li>
+					<li>
+						<div class="course-name">MATH 1365 &mdash; Introduction to Mathematical Reasoning <span class="tag-group"><span class="course-detail">Fall 2023</span></span></div>
+					</li>
+					<li>
+						<div class="course-name">MATH 2321 &mdash; Calculus III for Science/Engineering <span class="tag-group"><span class="course-detail">Summer 2023</span></span></div>
+					</li>
+					<li>
+						<div class="course-name">MATH 1231 &mdash; Calculus for Business/Economics <span class="tag-group"><span class="course-detail">Summer 2023</span></span></div>
+					</li>
+					<li>
+						<div class="course-name">MATH 1365 &mdash; Introduction to Mathematical Reasoning <span class="tag-group"><span class="course-detail">Spring 2023</span><span class="role-badge">Instructor of record</span></span></div>
+					</li>
+					<li>
+						<div class="course-name">MATH 1365 &mdash; Introduction to Mathematical Reasoning <span class="tag-group"><span class="course-detail">Fall 2022</span></span></div>
+						<div class="course-info">2 sections</div>
+					</li>
+				</ul>
+			</details>
+		</section>
 
-  <!-- Courses -->
-  <section>
-    <h2>Courses</h2>
-    <ul class="course-list">
-      <li>
-        <div class="course-name">MATH 1342 &mdash; Calculus II for Science/Engineering <span class="course-detail">Spring 2026</span></div>
-        <div class="course-info">2 sections</div>
-      </li>
-      <li>
-        <div class="course-name">MATH 1341 &mdash; Calculus I for Science/Engineering <span class="course-detail">Fall 2025</span></div>
-      </li>
-      <li>
-        <div class="course-name">MATH 1342 &mdash; Calculus II for Science/Engineering <span class="course-detail">Spring 2025</span></div>
-        <div class="course-info">3 sections</div>
-      </li>
-      <li>
-        <div class="course-name">MATH 1231 &mdash; Calculus for Business/Economics <span class="course-detail">Fall 2024</span></div>
-        <div class="course-info">3 sections</div>
-      </li>
-      <li>
-        <div class="course-name">MATH 2341 &mdash; Differential Equations &amp; Linear Algebra for Engineers <span class="course-detail">Summer 2024</span></div>
-      </li>
-      <li>
-        <div class="course-name">MATH 1342 &mdash; Calculus II for Science/Engineering <span class="course-detail">Spring 2024</span></div>
-        <div class="course-info">2 sections</div>
-      </li>
-      <li>
-        <div class="course-name">MATH 1365 &mdash; Intro to Mathematical Reasoning <span class="course-detail">Fall 2023</span></div>
-      </li>
-      <li>
-        <div class="course-name">MATH 2321 &mdash; Calculus III for Science/Engineering <span class="course-detail">Summer 2023</span></div>
-      </li>
-      <li>
-        <div class="course-name">MATH 1231 &mdash; Calculus for Business/Economics <span class="course-detail">Summer 2023</span></div>
-      </li>
-      <li>
-        <div class="course-name">MATH 1365 &mdash; Intro to Mathematical Reasoning <span class="course-detail">Spring 2023</span> <span class="role-badge">Instructor of record</span></div>
-      </li>
-      <li>
-        <div class="course-name">MATH 1365 &mdash; Intro to Mathematical Reasoning <span class="course-detail">Fall 2022</span></div>
-        <div class="course-info">2 sections</div>
-      </li>
-    </ul>
-  </section>
+		<section class="stagger-1">
+			<hr class="section-rule">
+			<details class="collapsible">
+				<summary><h2>Mentorship</h2></summary>
+				<div class="program-block">
+					<h3>Directed Reading Program</h3>
+					<ul class="mentee-list">
+						<li>
+							<div class="mentee-topic">Burning on weak path products &dagger; <span class="tag-group"><span class="semester">Spring 2026</span></span></div>
+							<div class="mentee-info">Cassie Chaluja, Maverick Donald-Wright, Swara Kadam, Ananya Suresh</div>
+						</li>
+						<li>
+							<div class="mentee-topic">Skeletal and chiral polyhedral complexes &Dagger; <span class="tag-group"><span class="semester">Spring 2026</span></span></div>
+							<div class="mentee-info">Rosalind Chang, Prithika Sriya Sankar, Daniel Suit</div>
+						</li>
+						<li>
+							<div class="mentee-topic">Abstract regular polytopes <span class="tag-group"><span class="semester">Spring 2025</span></span></div>
+							<div class="mentee-info">Anna Casarino, Rob Patterson</div>
+						</li>
+						<li>
+							<div class="mentee-topic">Differential forms on manifolds <span class="tag-group"><span class="semester">Spring 2024</span></span></div>
+							<div class="mentee-info">Ajay George, Candice Medina</div>
+						</li>
+						<li>
+							<div class="mentee-topic">Ehrhart polynomials <span class="tag-group"><span class="semester">Fall 2023</span></span></div>
+							<div class="mentee-info">JP Norton, Jack Oehling, Jiaqi Wang</div>
+						</li>
+						<li>
+							<div class="mentee-topic">Geometry of cyclic polytopes <span class="tag-group"><span class="semester">Spring 2023</span></span></div>
+							<div class="mentee-info">Tim Avitabile, Ryan Kelso, Dan Kiem</div>
+						</li>
+					</ul>
+					<p class="program-note">
+						&dagger; Co-mentored with Arturo Ortiz San Miguel
+						&ensp;&ensp;&ensp;
+						&Dagger; Co-mentored with Mei-Yu Huang
+					</p>
+				</div>
+				<div class="program-block">
+					<h3>Northeastern Summer Mathematics Research Program</h3>
+					<ul class="mentee-list">
+						<li>
+							<div class="mentee-topic">Burning vertex-transitive graphs &dagger; <span class="tag-group"><span class="semester">Summer 2026</span></span></div>
+							<div class="mentee-info">Colin Johnson, Vedant Mundhra, Gabe Rosenthal, Bobby Squires, Greyson Wells</div>
+						</li>
+						<li>
+							<div class="mentee-topic">Cops &amp; robbers on graphs, a survey of graph burning &dagger; <span class="tag-group"><span class="semester">Summer 2025</span></span></div>
+							<div class="mentee-info">Sally Ambrose, Jacob Chen, Daniel Ma, Wraven Watanabe, Stephen Whitcomb, Shanghao Wu</div>
+						</li>
+					</ul>
+					<p class="program-note">
+						&dagger; Co-mentored with Arturo Ortiz San Miguel
+					</p>
+				</div>
+			</details>
+		</section>
 
-  <!-- Mentorship -->
-  <section class="stagger-1">
-    <hr class="section-rule">
-    <h2>Mentorship</h2>
-
-    <div class="program-block">
-      <h3>Directed Reading Program</h3>
-      <ul class="mentee-list">
-        <li>
-          <div class="mentee-topic">Burning on weak path products &dagger; <span class="semester">Spring 2026</span></div>
-          <div class="mentee-info">Cassie Chaluja, Maverick Donald-Wright, Swara Kadam, Ananya Suresh</div>
-        </li>
-        <li>
-          <div class="mentee-topic">Skeletal and chiral polyhedral complexes &Dagger; <span class="semester">Spring 2026</span></div>
-          <div class="mentee-info">Rosalind Chang, Prithika Sriya Sankar, Daniel Suit</div>
-        </li>
-        <li>
-          <div class="mentee-topic">Abstract regular polytopes <span class="semester">Spring 2025</span></div>
-          <div class="mentee-info">Anna Casarino, Rob Patterson</div>
-        </li>
-        <li>
-          <div class="mentee-topic">Differential forms on manifolds <span class="semester">Spring 2024</span></div>
-          <div class="mentee-info">Ajay George, Candice Medina</div>
-        </li>
-        <li>
-          <div class="mentee-topic">Ehrhart polynomials <span class="semester">Fall 2023</span></div>
-          <div class="mentee-info">JP Norton, Jack Oehling, Jiaqi Wang</div>
-        </li>
-        <li>
-          <div class="mentee-topic">Geometry of cyclic polytopes <span class="semester">Spring 2023</span></div>
-          <div class="mentee-info">Tim Avitabile, Ryan Kelso, Dan Kiem</div>
-        </li>
-      </ul>
-      <p style="font-size: 0.78rem; color: var(--muted); margin-top: 0.75rem;">
-        &dagger; Co-mentored with Arturo Ortiz San Miguel
-        &ensp;&ensp;&ensp;
-        &Dagger; Co-mentored with Mei-Yu Huang
-      </p>
-    </div>
-
-    <div class="program-block">
-      <h3>Northeastern Summer Mathematics Research Program</h3>
-      <ul class="mentee-list">
-        <li>
-          <div class="mentee-topic">Burning vertex-transitive graphs &dagger; <span class="semester">Summer 2026</span></div>
-          <div class="mentee-info">Colin Johnson, Vedant Mundhra, Gabe Rosenthal, Bobby Squires, Greyson Wells</div>
-        </li>
-        <li>
-          <div class="mentee-topic">Cops &amp; robbers on graphs, a survey of graph burning &dagger; <span class="semester">Summer 2025</span></div>
-          <div class="mentee-info">Sally Ambrose, Jacob Chen, Daniel Ma, Wraven Watanabe, Stephen Whitcomb, Shanghao Wu</div>
-        </li>
-      </ul>
-      <p style="font-size: 0.78rem; color: var(--muted); margin-top: 0.75rem;">
-        &dagger; Co-mentored with Arturo Ortiz San Miguel
-      </p>
-    </div>
-  </section>
-
-  <footer>
-    <span>&copy; 2026 Evan Angelone</span>
-  </footer>
-
-</body>
+		<footer>
+			<span>&copy; 2026 Evan Angelone</span>
+		</footer>
+	</body>
 </html>

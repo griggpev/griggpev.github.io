@@ -43,33 +43,33 @@
 }
 
 
-/* ── Variables ────────────────────────────────────────── */
+/* ── Design tokens ─────────────────────────────────────────
+   Light mode is the default here; the dark-mode block at the end of
+   this file re-points the same tokens. The type hierarchy runs
+   section-head → entry-title → text, highest to lowest contrast, so
+   headings read as the darkest ink in light mode and the brightest in
+   dark mode. Accent colors are Reed's Golden Laurel (light) and
+   No. 2 Pencil (dark), per the college graphic standards.
+   ────────────────────────────────────────────────────────── */
 
 :root {
-  /* palette */
-  --black:       #000000;
-  --white:       #FFFFFF;
-  --red:         #A70E16;
-  --green:       #7E8A65;
-  --gold:        #BF995D;
-  --yellow:      #FFC846;
-  --cream:       #FFF7E9;
-  --ice:         #DFE7E7;
-  --teal:        #3F6574;
-  --warm-grey:   #ECEAE4;
-  --coral:       #E84A37;
-  --light-grey:  #F3F3F2;
-  --mid-grey:    #4B4C4D;
-  --dark-grey:   #231E20;
+  /* surfaces */
+  --bg:            #F7F4EC;
+  --card-bg:       #EFE9DA;
+  --rule:          #E1DBCB;
 
-  /* semantic */
-  --accent:      var(--red);
-  --muted:       var(--mid-grey);
-  --rule:        #d4d0cb;
-  --card-bg:     var(--light-grey);
-  --link-blue:   #185D9E;
+  /* type hierarchy */
+  --section-head:  #1A1813;
+  --entry-title:   #454035;
+  --text:          #6A6456;
+  --muted:         #6A6456;
 
-  /* font stacks */
+  /* accents */
+  --accent:        #BF995D;   /* Reed "Golden Laurel" */
+  --ink:           #1A1813;   /* text sitting on --accent (e.g. selection) */
+  --link-blue:     #185D9E;
+
+  /* fonts */
   --serif-display: 'GT Sectra Display', Georgia, serif;
   --serif-paper:   'GT Sectra Paper', Georgia, serif;
   --sans-narrow:   'National 2 Narrow', sans-serif;
@@ -89,14 +89,22 @@ body {
   font-size: 17px;
   font-weight: 300;
   line-height: 1.65;
-  color: var(--black);
-  background: var(--white);
+  color: var(--text);
+  background: var(--bg);
   font-feature-settings: "lnum" 1, "pnum" 1;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ease the background/text swap when toggling light ↔ dark. */
+body, nav, footer {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 ::selection {
-  background: var(--red);
-  color: var(--white);
+  background: var(--accent);
+  color: var(--ink);
 }
 
 a {
@@ -111,14 +119,17 @@ a:hover {
 }
 
 
-/* ── Navigation ───────────────────────────────────────── */
+/* ── Navigation ───────────────────────────────────────────
+   The bar and footer share the page background so they read as
+   part of the page rather than as chrome. Their text uses the
+   type tokens, so it flips to the correct shade in each mode. */
 
 nav {
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 100;
-  background: var(--dark-grey);
+  background: var(--bg);
 }
 
 nav .nav-inner {
@@ -132,28 +143,56 @@ nav .nav-inner {
 }
 
 nav .nav-name {
-  font-family: var(--serif-display);
-  font-size: 1.15rem;
-  font-weight: 400;
-  color: var(--light-grey);
-  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
   border: none;
+  transition: color 0.25s;
 }
 
 nav .nav-name:hover {
-  color: var(--white);
-  border: none;
+  color: var(--section-head);
+}
+
+nav .nav-name .icon-wrap {
+  position: relative;
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+}
+
+nav .nav-name .icon-wrap svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  fill: var(--accent);
+  transition: opacity 0.2s ease;
+}
+
+nav .nav-name .icon-hover {
+  opacity: 0;
+}
+
+nav .nav-name:hover .icon-default {
+  opacity: 0;
+}
+
+nav .nav-name:hover .icon-hover {
+  opacity: 1;
 }
 
 nav .nav-links {
   display: flex;
+  align-items: center;
   gap: 1.75rem;
 }
 
 nav .nav-links a {
   font-size: 0.85rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border: none;
@@ -162,7 +201,7 @@ nav .nav-links a {
 
 nav .nav-links a:hover,
 nav .nav-links a.active {
-  color: var(--white);
+  color: var(--section-head);
 }
 
 .hamburger {
@@ -179,7 +218,7 @@ nav .nav-links a.active {
   display: block;
   width: 100%;
   height: 2px;
-  background: var(--white);
+  background: var(--section-head);
   position: absolute;
   left: 0;
   transition: all 0.3s ease;
@@ -190,60 +229,135 @@ nav .nav-links a.active {
 .hamburger span:nth-child(3) { top: 18px; }
 
 
+/* ── Dark/light slider switch (injected into .nav-links) ─── */
+
+.mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mode-track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 52px;
+  height: 26px;
+  padding: 0 6px;
+  border-radius: 13px;
+  background: var(--card-bg);
+  border: 1px solid var(--rule);
+  box-sizing: border-box;
+  transition: border-color 0.25s ease;
+}
+
+.mode-toggle:hover .mode-track {
+  border-color: var(--muted);
+}
+
+.mode-track .mode-ico {
+  font-size: 12px;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.mode-thumb {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateY(-50%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: left 0.25s ease;
+}
+
+/* Checked = dark → thumb slides to the moon (right) end. */
+.mode-toggle[aria-checked="true"] .mode-thumb {
+  left: 29px;
+}
+
+
 /* ── Hero (home page) ─────────────────────────────────── */
 
 .hero {
-  padding: 10rem 2rem 5rem;
+  padding: 6rem 2rem 2.5rem;
   max-width: 960px;
   margin: 0 auto;
   animation: fadeUp 0.8s ease both;
 }
 
+/* Uniform rhythm so the rule sits equidistant between the bio and the
+   contact block, and the page fits the fold. */
+.hero + section {
+  padding-top: 0;
+  padding-bottom: 2.5rem;
+}
+
+.hero + section .section-rule {
+  margin-bottom: 2.5rem;
+}
+
 .hero-grid {
   display: grid;
-  grid-template-columns: 1fr clamp(140px, 20vw, 240px);
-  gap: 3rem;
+  grid-template-columns: 1fr clamp(150px, 20vw, 220px);
+  gap: 4.5rem;
   align-items: start;
 }
 
 .hero h1 {
   font-family: var(--serif-display);
-  font-size: 3rem;
+  font-size: 3.25rem;
   font-weight: 300;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--section-head);
+  margin-bottom: 1.25rem;
 }
 
 .hero h1 span {
-  color: var(--red);
-  font-weight: 700;
+  color: var(--accent);
+  font-weight: 400;
 }
 
 .hero .subtitle {
-  font-size: 1.15rem;
-  font-weight: 300;
-  color: var(--muted);
-  margin-bottom: 1.5rem;
+  font-family: var(--sans-narrow);
+  font-size: 0.82rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--entry-title);
+  margin-bottom: 2.25rem;
 }
 
 .hero .intro {
   max-width: 540px;
-  color: var(--black);
 }
 
 .hero .photo {
   width: 100%;
-  border-radius: 6px;
+  border-radius: 2px;
   object-fit: cover;
   aspect-ratio: 3 / 4;
+  filter: grayscale(100%);
+  transition: filter 0.4s ease;
+}
+
+.hero .photo:hover {
+  filter: grayscale(0%);
 }
 
 
 /* ── Page header (subpages) ───────────────────────────── */
 
 .page-header {
-  padding: 8rem 2rem 0.5rem;
+  padding: 6rem 2rem 0.5rem;
   max-width: 960px;
   margin: 0 auto;
   animation: fadeUp 0.8s ease both;
@@ -255,9 +369,48 @@ nav .nav-links a.active {
 }
 
 
-/* ── Sections ─────────────────────────────────────────── */
+/* ── Bio ──────────────────────────────────────────────── */
+
+.bio-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4.5rem;
+  align-items: start;
+}
+
+.bio-text p + p {
+  margin-top: 1.5rem;
+}
+
+.bio-photo-figure {
+  margin: 0;
+}
+
+.bio-photo {
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+  filter: grayscale(100%);
+  transition: filter 0.4s ease;
+}
+
+.bio-photo:hover {
+  filter: grayscale(0%);
+}
+
+.bio-photo-caption {
+  margin-top: 0.6rem;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+
+/* ── Sections & headings ──────────────────────────────── */
 
 section {
+  width: 100%;
   max-width: 960px;
   margin: 0 auto;
   padding: 1rem 2rem;
@@ -267,7 +420,8 @@ section {
 .section-rule {
   border: none;
   border-top: 1px solid var(--rule);
-  margin-bottom: 3rem;
+  width: 100%;
+  margin: 0 0 3rem;
 }
 
 .section-label {
@@ -285,8 +439,61 @@ h2 {
   font-size: 2rem;
   font-weight: 400;
   letter-spacing: -0.01em;
-  color: var(--mid-grey);
+  color: var(--section-head);
   margin-bottom: 1rem;
+}
+
+
+/* ── Collapsible sections ─────────────────────────────── */
+
+.collapsible summary {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.collapsible summary::-webkit-details-marker {
+  display: none;
+}
+
+.collapsible summary h2 {
+  margin-bottom: 0;
+}
+
+.collapsible summary::before {
+  content: "▸";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  color: var(--accent);
+  transition: transform 0.25s ease;
+}
+
+.collapsible[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.collapsible > *:not(summary) {
+  margin-top: 1rem;
+}
+
+/* theme-toggle.js wraps a dropdown's content in .collapsible-content and
+   transitions its height/opacity so it animates open AND closed. The gap
+   below the summary lives on the inner content so it collapses with it. */
+.collapsible > .collapsible-content {
+  margin-top: 0;
+  overflow: hidden;
+}
+
+.collapsible-content > *:first-child {
+  margin-top: 1rem;
 }
 
 
@@ -295,40 +502,44 @@ h2 {
 .tag,
 .semester,
 .course-detail,
-.role-badge,
-.year {
+.role-badge {
   display: inline-block;
   font-family: var(--sans);
   font-size: 0.72rem;
   font-weight: 400;
-  background: var(--card-bg);
-  color: var(--accent);
-  padding: 0.15rem 0.5rem;
+  color: var(--muted);
+  padding: 0.12rem 0.5rem;
+  border: 1px solid var(--rule);
   border-radius: 3px;
   margin-left: 0.5rem;
   vertical-align: middle;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease;
 }
 
-.semester {
-  font-size: 0.75rem;
-  padding: 0.1rem 0.45rem;
-  margin-left: 0.4rem;
+.tag-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  gap: 0.4rem;
+}
+
+.tag-group .tag,
+.tag-group .semester,
+.tag-group .course-detail,
+.tag-group .role-badge {
+  margin-left: 0;
 }
 
 a.tag {
-  background: var(--accent);
-  color: var(--white);
+  color: var(--accent);
 }
 
 a.tag:hover {
-  background: var(--card-bg);
-  color: var(--accent);
-  border-bottom-color: transparent;
+  border-color: var(--accent);
 }
 
 
-/* ── Papers ────────────────────────────────────────────── */
+/* ── Papers ───────────────────────────────────────────── */
 
 .paper-list {
   list-style: none;
@@ -347,7 +558,7 @@ a.tag:hover {
   font-family: var(--serif-paper);
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--dark-grey);
+  color: var(--entry-title);
   margin-bottom: 0.25rem;
 }
 
@@ -364,32 +575,7 @@ a.tag:hover {
 }
 
 
-/* ── Dissertation ──────────────────────────────────────── */
-
-.diss-status {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  padding: 0.15rem 0.55rem;
-  border-radius: 3px;
-  white-space: nowrap;
-}
-
-.diss-status.pending     { background: var(--card-bg); color: var(--muted); }
-.diss-status.complete    { background: var(--card-bg); color: var(--green); }
-.diss-status.in-progress { background: var(--card-bg); color: var(--gold); }
-
-
-/* ── Courses ───────────────────────────────────────────── */
-
-.subsection {
-  margin-bottom: 2rem;
-}
-
-.subsection:last-child {
-  margin-bottom: 0;
-}
+/* ── Courses ──────────────────────────────────────────── */
 
 .course-list {
   list-style: none;
@@ -411,7 +597,7 @@ a.tag:hover {
   font-family: var(--serif-paper);
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--dark-grey);
+  color: var(--entry-title);
   width: 100%;
   margin-bottom: 0.15rem;
 }
@@ -422,7 +608,7 @@ a.tag:hover {
 }
 
 
-/* ── Mentorship ────────────────────────────────────────── */
+/* ── Mentorship ───────────────────────────────────────── */
 
 .program-block {
   margin-bottom: 2.5rem;
@@ -436,8 +622,14 @@ a.tag:hover {
   font-family: var(--serif-display);
   font-size: 1.25rem;
   font-weight: 400;
-  color: var(--dark-grey);
+  color: var(--entry-title);
   margin-bottom: 1rem;
+}
+
+.program-note {
+  margin-top: 0.75rem;
+  font-size: 0.78rem;
+  color: var(--muted);
 }
 
 .mentee-list {
@@ -457,10 +649,15 @@ a.tag:hover {
 }
 
 .mentee-topic {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
   font-family: var(--serif-paper);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  color: var(--dark-grey);
+  color: var(--entry-title);
   width: 100%;
   margin-bottom: 0.15rem;
 }
@@ -471,36 +668,33 @@ a.tag:hover {
 }
 
 
-/* ── Recognition ───────────────────────────────────────── */
+/* ── Resources ────────────────────────────────────────── */
 
-.award-list {
-  list-style: none;
+.resource-block {
+  margin-bottom: 2.5rem;
 }
 
-.award-list li {
-  padding: 0.85rem 0;
-  border-bottom: 1px solid var(--rule);
+.resource-block:last-child {
+  margin-bottom: 0;
 }
 
-.award-list li:last-child {
-  border-bottom: none;
+.resource-block h3 {
+  font-family: var(--serif-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--entry-title);
+  margin-bottom: 0.5rem;
 }
 
-.award-name {
-  font-family: var(--serif-paper);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--dark-grey);
-  margin-bottom: 0.15rem;
-}
-
-.award-detail {
-  font-size: 0.88rem;
+.resource-blurb {
+  font-size: 0.92rem;
   color: var(--muted);
+  max-width: 680px;
+  margin-bottom: 1rem;
 }
 
 
-/* ── Downloads ─────────────────────────────────────────── */
+/* ── Downloads ────────────────────────────────────────── */
 
 .download-row {
   display: flex;
@@ -509,29 +703,20 @@ a.tag:hover {
   align-items: flex-start;
 }
 
-.download-item {
-  display: flex;
-  flex-direction: column;
-}
-
 .download-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: var(--accent);
-  color: var(--white);
-  border-radius: 6px;
+  padding: 0.7rem 1.4rem;
+  color: var(--accent);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
   font-size: 0.9rem;
-  font-weight: 500;
-  border: none;
-  transition: background 0.25s ease;
+  transition: border-color 0.25s ease;
 }
 
 .download-btn:hover {
-  background: var(--card-bg);
-  color: var(--accent);
-  border-bottom-color: transparent;
+  border-color: var(--accent);
 }
 
 .download-btn svg {
@@ -541,84 +726,107 @@ a.tag:hover {
 }
 
 
-/* ── Contact ───────────────────────────────────────────── */
+/* ── Contact ──────────────────────────────────────────── */
 
 .contact-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 4rem;
 }
 
 .contact-info p {
   margin-bottom: 0.6rem;
 }
 
-.contact-info .label {
-  font-size: 0.78rem;
-  font-weight: 600;
+.contact-info h2,
+.office-card h3 {
+  font-family: var(--sans-narrow);
+  font-size: 0.82rem;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
+  letter-spacing: 0.22em;
+  color: var(--entry-title);
+  margin-bottom: 0.75rem;
 }
 
-.contact-info .email-link {
+.email-link {
   font-family: var(--mono);
   color: var(--link-blue);
 }
 
-.contact-info .email-link:hover {
+.email-link:hover {
   border-bottom-color: var(--link-blue);
 }
 
-.office-card {
+
+/* ── Source-code viewer (files/*-source.html) ─────────── */
+
+.code-view-header {
+  padding: 1.5rem 2rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+}
+
+.code-view-pre {
+  flex: 1;
+  margin: 0;
+  padding: 1.5rem 2rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--text);
   background: var(--card-bg);
-  border-radius: 8px;
-  padding: 1.5rem;
-}
-
-.office-card h3 {
-  font-family: var(--serif-display);
-  font-weight: 700;
-  margin-bottom: 0.75rem;
+  overflow-x: auto;
+  white-space: pre;
 }
 
 
-/* ── Footer ────────────────────────────────────────────── */
+/* ── Footer ───────────────────────────────────────────── */
 
 footer {
   width: 100%;
+  margin-top: auto;
   padding: 2rem;
-  background: var(--dark-grey);
-  color: rgba(255, 255, 255, 0.85);
+  background: var(--bg);
+  color: var(--muted);
   font-size: 0.82rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-footer a { color: rgba(255, 255, 255, 0.85); }
-footer a:hover { color: var(--white); border-bottom-color: var(--white); }
+footer a { color: var(--muted); }
+footer a:hover { color: var(--section-head); border-bottom-color: currentColor; }
 
 
-/* ── Animation ─────────────────────────────────────────── */
+/* ── Animation ────────────────────────────────────────── */
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Subtle reveal for the mobile menu — kept small on purpose. */
+@keyframes navReveal {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
 
 
-/* ── Mobile ────────────────────────────────────────────── */
+/* ── Mobile ───────────────────────────────────────────── */
 
 @media (max-width: 700px) {
   .hero {
     padding: 7rem 1.25rem 3rem;
   }
 
-  .hero-grid {
+  .hero-grid,
+  .bio-grid,
+  .contact-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
@@ -643,29 +851,40 @@ footer a:hover { color: var(--white); border-bottom-color: var(--white); }
     padding: 2rem 1.25rem;
   }
 
-  .contact-grid {
-    grid-template-columns: 1fr;
-  }
-
   .nav-links {
     display: none !important;
     flex-direction: column;
+    align-items: flex-start;
     position: absolute;
     top: 56px;
     left: 0;
     right: 0;
-    background: var(--dark-grey);
+    background: var(--bg);
     padding: 1rem 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid var(--rule);
     gap: 1rem;
   }
 
   .nav-links.open {
     display: flex !important;
+    animation: navReveal 0.25s ease;
   }
 
   .hamburger {
     display: block;
+  }
+
+  /* Bars ease into an X while the menu is open. */
+  .nav-inner:has(.nav-links.open) .hamburger span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+
+  .nav-inner:has(.nav-links.open) .hamburger span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav-inner:has(.nav-links.open) .hamburger span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
   }
 
   footer {
@@ -673,4 +892,37 @@ footer a:hover { color: var(--white); border-bottom-color: var(--white); }
     gap: 0.5rem;
     text-align: center;
   }
+}
+
+
+/* ══ Dark mode ═════════════════════════════════════════════
+   Applies automatically on devices set to dark, unless the visitor
+   has chosen light, and always when they pick dark via the nav
+   switch. theme-toggle.js manages the data-mode attribute.
+   ══════════════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode="light"]) {
+    --bg:           #16161A;
+    --card-bg:      #202026;
+    --rule:         #2E2E34;
+    --section-head: #F1EEE7;
+    --entry-title:  #C6C1B6;
+    --text:         #9C978C;
+    --muted:        #9C978C;
+    --accent:       #FFC846;   /* Reed "No. 2 Pencil" */
+    --link-blue:    #7FB3E0;
+  }
+}
+
+:root[data-mode="dark"] {
+  --bg:           #16161A;
+  --card-bg:      #202026;
+  --rule:         #2E2E34;
+  --section-head: #F1EEE7;
+  --entry-title:  #C6C1B6;
+  --text:         #9C978C;
+  --muted:        #9C978C;
+  --accent:       #FFC846;   /* Reed "No. 2 Pencil" */
+  --link-blue:    #7FB3E0;
 }

@@ -3,9 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="keywords" content="Evan Angelone, Evan Griggs, mathematics, Northeastern University">
-		<meta name="description" content="Evan Angelone (formerly Evan Griggs) — Mathematics PhD Candidate at Northeastern University">
-		<title>Evan Angelone — Mathematics</title>
+		<title>Bio — Evan Angelone</title>
 		<link rel="stylesheet" href="style.css">
 		<script src="theme-toggle.js"></script>
 	</head>
@@ -23,51 +21,87 @@
 				<div class="nav-links">
 					<a href="research.html">Research</a>
 					<a href="teaching.html">Teaching</a>
-					<a href="bio.html">Bio</a>
+					<a href="bio.html" class="active">Bio</a>
 					<a href="cv.html">CV</a>
 					<a href="resources.html">Resources</a>
 				</div>
 			</div>
 		</nav>
-		<header class="hero">
-			<div class="hero-grid">
-				<div>
-					<h1>Evan <span>Angelone</span></h1>
-					<p class="subtitle">Mathematics PhD Candidate &middot; Northeastern University</p>
-					<p class="intro">
-						I am a PhD candidate in the Department of Mathematics at Northeastern
-						University, advised by <a href="https://mathgenealogy.org/id.php?id=23353" target="_blank" rel="noopener">Egon Schulte</a>. My research focuses on discrete
-						geometry, algebraic graph theory, and combinatorial topology, particularly as they relate to abstract polytopes, chiral symmetry, and the
-						combinatorics of convex polytopes. Previously,
-						I earned an AS from Raritan Valley Community College (2018) as a
-						first-generation college student and a BA from Reed College (2021),
-						where I wrote my year-long senior thesis regarding the Ehrhart polynomial of cyclic polytopes under <a href="https://mathgenealogy.org/id.php?id=55108" target="_blank" rel="noopener">Jamie Pommersheim</a>.
-					</p>
-				</div>
-				<img src="photo.jpg" alt="Evan Angelone" class="photo">
-			</div>
+		<header class="page-header">
+			<div class="section-label">Bio</div>
 		</header>
 		<section>
-			<hr class="section-rule">
-			<div class="contact-grid">
-				<div class="contact-info">
-					<h2>Contact</h2>
-					<p><a href="mailto:griggs.e@northeastern.edu" class="email-link">griggs.e@northeastern.edu</a></p>
-					<p><a href="mailto:epangelone@icloud.com" class="email-link">epangelone@icloud.com</a></p>
-				</div>
-				<div class="office-card">
-					<h3>Office</h3>
+			<div class="bio-grid">
+				<div class="bio-text">
 					<p>
-						Lake Hall 563<br>
-						Department of Mathematics<br>
-						Northeastern University<br>
-						Boston, MA 02115
+						I was born in Las Vegas, Nevada and lived briefly in Nederland, Colorado before finally moving to Raritan, New Jersey where I'd spend the next 20 years or so. Growing up, math never really interested me as I much preferred MMOs and old movies to schoolwork. In fact, my very low grades throughout all of primary, middle, and highschool reflected that&mdash;I got into a lot of trouble and nearly dropped out a few times. When I somehow floundered my way into an AP calculus course my senior year (despite having neither any desire nor plan to go to college), my then-teacher, <a href="https://people.njit.edu/profile/sk466" target="_blank" rel="noopener">Dr. (Steve) Kane</a>, believed I was capable of more. Being <i>seen</i> supplied me with reasons to <i>try</i>.
+					</p>
+					<p>
+						I was a first-generation college student starting at my local community college. After two years, I had the option of joining my friends in transferring to Rutgers or NJIT to earn my bachelor's, but my family's path led west to Oregon. Coincidentally, I had recently heard about an alternative liberal arts school in Portland called Reed College, and so the list of things pulling me westward kept growing. With a letter from Doc Kane, I would end up attending Reed 3,000 miles away from the life I'd had before. The intensity of Reed's liberal arts education shaped who I am today. I came to understand math as an intrinsically humane and communal endeavor, not unlike storytelling or music.
+					</p>
+					<p>
+						When I'm not in the classroom, doing research, or when I return home to Bend, Oregon, I like to cook hearty meals for my loved ones, as well as spending time with my corgi-lab mix, Luna. I also love drinking Laphroaig, and rock climbing when I can.
 					</p>
 				</div>
+				<figure class="bio-photo-figure">
+					<img src="" alt="Evan Angelone" class="bio-photo" id="bio-photo">
+					<figcaption class="bio-photo-caption" id="bio-photo-caption"></figcaption>
+				</figure>
 			</div>
 		</section>
 		<footer>
 			<span>&copy; 2026 Evan Angelone</span>
 		</footer>
+		<script>
+			// Pick a random available photo from bio-photos/ and caption it.
+			const maxBioPhotos = 30;
+			const bioPhotoExtensions = ["jpg", "jpeg", "png", "webp"];
+			const bioPhotoCaptions = {
+				1: "An avian enthusiast's favorite bird, the bearded vulture.",
+				2: "It's in the ankle.",
+				3: "Mount Tabor in Portland, Oregon.",
+				7: "Pulling plastic pockets.",
+				8: "Daily maintenance in Oregon's high desert.",
+				9: "Spring 2026 DRP presentations.",
+				10: "Summer 2025 NSMRP.",
+				11: "The reason for the sign and the sign.",
+				12: "Luna was feral when we found her.",
+				13: "Doc Kane.",
+				14: "Worthwhile food poisoning.",
+				15: "Chatty Tipper.",
+				17: "A fondness for street cats.",
+				18: "Polyhedral musings.",
+				19: "Barefoot backpacking across Oregon.",
+				21: "An Etruscan dodecahedron makes an appearance in Disney's Andor.",
+				22: "The affine group AGL(1, 8) realizes a chiral map."
+			};
+			function probePhoto(n, extIndex) {
+				return new Promise((resolve) => {
+					if (extIndex >= bioPhotoExtensions.length) {
+						resolve(null);
+						return;
+					}
+					const src = `bio-photos/${n}.${bioPhotoExtensions[extIndex]}`;
+					const img = new Image();
+					img.onload = () => resolve(src);
+					img.onerror = () => resolve(probePhoto(n, extIndex + 1));
+					img.src = src;
+				});
+			}
+			async function loadRandomBioPhoto() {
+				const found = [];
+				for (let n = 1; n <= maxBioPhotos; n++) {
+					const src = await probePhoto(n, 0);
+					if (!src) break;
+					found.push({ n, src });
+				}
+				if (found.length > 0) {
+					const choice = found[Math.floor(Math.random() * found.length)];
+					document.getElementById("bio-photo").src = choice.src;
+					document.getElementById("bio-photo-caption").textContent = bioPhotoCaptions[choice.n] || "";
+				}
+			}
+			loadRandomBioPhoto();
+		</script>
 	</body>
 </html>
