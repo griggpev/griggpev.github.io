@@ -7,86 +7,103 @@
 		<link rel="stylesheet" href="../style.css">
 	</head>
 	<body class="code-view">
-	<header class="code-view-header">ea-hwtp.sty</header>
-	  <pre class="code-view-pre"><code>% homework template - Evan Angelone
-		\NeedsTeXFormat{LaTeX2e}
-		\ProvidesPackage{ea-hwtp}[2026/01/01 Homework Template Package]
-		\@twosidetrue
-		% --- package options ---------------------------------------------------
-		\newif\if@microtype
-		\@microtypefalse  % off by default; not worth the compile time on long sets
-		\newif\if@showsolutions
+		<header class="code-view-header">ea-hwtp.sty</header>
+		<pre class="code-view-pre"><code>% homework template - Evan Angelone
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ea-hwtp}[2026/01/01 Homework Template Package]
+\@twosidetrue
+
+% --- package options ---------------------------------------------------
+
+\newif\if@microtype
+\@microtypefalse  % off by default; not worth the compile time on long sets
+
+\newif\if@showsolutions
+\@showsolutionstrue
+
+\DeclareOption{microtype}{\@microtypetrue}
+\DeclareOption*{%
+	\edef\@eahwtp@curopt{\CurrentOption}%
+	\def\@eahwtp@shst{showsolutions=true}%
+	\def\@eahwtp@shsf{showsolutions=false}%
+	\ifx\@eahwtp@curopt\@eahwtp@shst
 		\@showsolutionstrue
-		\DeclareOption{microtype}{\@microtypetrue}
-		\DeclareOption*{%
-		\edef\@eahwtp@curopt{\CurrentOption}%
-		\def\@eahwtp@shst{showsolutions=true}%
-		\def\@eahwtp@shsf{showsolutions=false}%
-		\ifx\@eahwtp@curopt\@eahwtp@shst
-		\@showsolutionstrue
-		\else\ifx\@eahwtp@curopt\@eahwtp@shsf
+	\else\ifx\@eahwtp@curopt\@eahwtp@shsf
 		\@showsolutionsfalse
-		\else
+	\else
 		\PackageWarning{ea-hwtp}{Unknown option '\CurrentOption'}%
-		\fi\fi
-		}
-		\ProcessOptions\relax
-		% --- required packages --------------------------------------------------
-		\RequirePackage[nosumlimits]{amsmath}
-		\RequirePackage{amssymb}
-		\RequirePackage{amsthm}
-		\RequirePackage{thmtools}
-		\RequirePackage[dvipsnames]{xcolor}
-		\RequirePackage{etoolbox}
-		\RequirePackage{fancyhdr}
-		\RequirePackage[margin=1in]{geometry}
-		\RequirePackage{setspace}
-		    \setdisplayskipstretch{1}
-		\RequirePackage[most]{tcolorbox}
-		\if@microtype
-		    \RequirePackage[%
-		        activate=true,
-		        tracking=true,
-		        kerning=true
-		    ]{microtype}
-		\fi
-		% --- colors --------------------------------------------------------------
-		\definecolor{linkblue}{RGB}{20, 72, 140}
-		\definecolor{urlmagenta}{RGB}{128, 0, 128}
-		\definecolor{exercisecolor}{RGB}{63, 101, 118}
-		\definecolor{solutioncolor}{RGB}{126, 138, 101}
-		\definecolor{GGHeader}{RGB}{58, 59, 60}
-		\definecolor{GGBold}{RGB}{26, 23, 24}
-		\definecolor{GGText}{RGB}{47, 47, 48}
-		\definecolor{Eggshell}{RGB}{240, 240, 239}
-		\AtBeginDocument{\color{GGText}}
-		% textbf/emph normally just switch shape - here they also switch color
-		\let\oldtextbf\textbf
-		\renewcommand{\textbf}[1]{{\bfseries\color{GGBold}#1}}
-		\let\oldemph\emph
-		\renewcommand{\emph}[1]{{\itshape\color{GGBold}#1}}
-		\RequirePackage{titlesec}
-		\titleformat{\section}
-		{\normalfont\Large\bfseries\color{GGHeader}}{\thesection}{1em}{}
-		\titleformat{\subsection}
-		{\normalfont\large\bfseries\color{GGHeader}}{\thesubsection}{1em}{}
-		\titleformat{\subsubsection}
-		{\normalfont\normalsize\bfseries\color{GGHeader}}{\thesubsubsection}{1em}{}
-		% --- title metadata --------------------------------------------------------
-		\newcommand{\@hwname}{}
-		\newcommand{\@hwdate}{\today}
-		\newcommand{\@hwcourse}{}
-		\newcommand{\@hwtitle}{Homework}
-		\renewcommand{\and}{\unskip, }
-		\newcommand{\name}[1]{\renewcommand{\@hwname}{#1}}
-		\renewcommand{\date}[1]{\renewcommand{\@hwdate}{#1}}
-		\newcommand{\course}[1]{\renewcommand{\@hwcourse}{#1}}
-		\newcommand{\homework}[1]{\renewcommand{\@hwtitle}{#1}}
-		% hyperref wants to be loaded last, after everyone else has had
-		% a chance to fight over colors and \maketitle
-		\AtEndPreamble{%
-		\RequirePackage{hyperref}
-		\hypersetup{
+	\fi\fi
+}
+\ProcessOptions\relax
+
+% --- required packages --------------------------------------------------
+
+\RequirePackage[nosumlimits]{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{thmtools}
+\RequirePackage[dvipsnames]{xcolor}
+\RequirePackage{etoolbox}
+\RequirePackage{fancyhdr}
+\RequirePackage[margin=1in]{geometry}
+\RequirePackage{setspace}
+    \setdisplayskipstretch{1}
+\RequirePackage[most]{tcolorbox}
+
+\if@microtype
+    \RequirePackage[%
+        activate=true,
+        tracking=true,
+        kerning=true
+    ]{microtype}
+\fi
+
+% --- colors --------------------------------------------------------------
+
+\definecolor{linkblue}{RGB}{20, 72, 140}
+\definecolor{urlmagenta}{RGB}{128, 0, 128}
+\definecolor{exercisecolor}{RGB}{63, 101, 118}
+\definecolor{solutioncolor}{RGB}{126, 138, 101}
+\definecolor{GGHeader}{RGB}{58, 59, 60}
+\definecolor{GGBold}{RGB}{26, 23, 24}
+\definecolor{GGText}{RGB}{47, 47, 48}
+\definecolor{Eggshell}{RGB}{240, 240, 239}
+
+\AtBeginDocument{\color{GGText}}
+
+% textbf/emph normally just switch shape - here they also switch color
+\let\oldtextbf\textbf
+\renewcommand{\textbf}[1]{{\bfseries\color{GGBold}#1}}
+\let\oldemph\emph
+\renewcommand{\emph}[1]{{\itshape\color{GGBold}#1}}
+
+\RequirePackage{titlesec}
+\titleformat{\section}
+	{\normalfont\Large\bfseries\color{GGHeader}}{\thesection}{1em}{}
+\titleformat{\subsection}
+	{\normalfont\large\bfseries\color{GGHeader}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+	{\normalfont\normalsize\bfseries\color{GGHeader}}{\thesubsubsection}{1em}{}
+
+% --- title metadata --------------------------------------------------------
+
+\newcommand{\@hwname}{}
+\newcommand{\@hwdate}{\today}
+\newcommand{\@hwcourse}{}
+\newcommand{\@hwtitle}{Homework}
+\renewcommand{\and}{\unskip, }
+
+\newcommand{\name}[1]{\renewcommand{\@hwname}{#1}}
+\renewcommand{\date}[1]{\renewcommand{\@hwdate}{#1}}
+\newcommand{\course}[1]{\renewcommand{\@hwcourse}{#1}}
+\newcommand{\homework}[1]{\renewcommand{\@hwtitle}{#1}}
+
+% hyperref wants to be loaded last, after everyone else has had
+% a chance to fight over colors and \maketitle
+\AtEndPreamble{%
+	\RequirePackage{hyperref}
+	\hypersetup{
 		colorlinks=true,
 		linkcolor=linkblue,
 		citecolor=SpringGreen,
@@ -96,167 +113,196 @@
 		pdfauthor={\@hwname},
 		pdfsubject={\@hwcourse},
 		pdfcreator={LaTeX with ea-hwtp.sty},
-		}
-		}
-		\renewcommand{\@maketitle}{%
-		\noindent
-		{\Large\bfseries\color{GGBold}\@hwtitle}
-		\hfill
-		{\color{GGHeader}\@hwcourse}
-		\hfill
-		{\color{GGHeader}\@hwname}
-		\hfill
-		{\slshape\color{GGHeader}\@hwdate}
-		\bigskip
-		}
-		\let\oldmaketitle\maketitle
-		\renewcommand{\maketitle}{\oldmaketitle\thispagestyle{empty}}
-		\AtBeginDocument{\maketitle}
-		% --- theorem-like environments ---------------------------------------------
-		\theoremstyle{plain}
-		\newtheorem{theorem}{Theorem}[section]
-		\newtheorem{lemma}[theorem]{Lemma}
-		\newtheorem{corollary}[theorem]{Corollary}
-		\newtheorem{proposition}[theorem]{Proposition}
-		\newtheorem{conjecture}[theorem]{Conjecture}
-		\newtheorem{claim}[theorem]{Claim}
-		\theoremstyle{definition}
-		\newtheorem{definition}[theorem]{Definition}
-		\newtheorem{example}[theorem]{Example}
-		\newtheorem{notation}[theorem]{Notation}
-		\theoremstyle{remark}
-		\newtheorem{remark}[theorem]{Remark}
-		\newtheorem{note}[theorem]{Note}
-		% starred versions, unnumbered, for when I don't want them tied to a section
-		\theoremstyle{plain}
-		\newtheorem*{theorem*}{Theorem}
-		\newtheorem*{lemma*}{Lemma}
-		\newtheorem*{corollary*}{Corollary}
-		\newtheorem*{proposition*}{Proposition}
-		\newtheorem*{conjecture*}{Conjecture}
-		\newtheorem*{claim*}{Claim}
-		\theoremstyle{definition}
-		\newtheorem*{definition*}{Definition}
-		\newtheorem*{example*}{Example}
-		\newtheorem*{notation*}{Notation}
-		\theoremstyle{remark}
-		\newtheorem*{remark*}{Remark}
-		\newtheorem*{note*}{Note}
-		% --- exercise environment ---------------------------------------------------
-		\newcounter{exercise}[section]
-		\renewcommand{\theexercise}{\thesection.\arabic{exercise}}
-		% if the document never starts a section, fall back to flat numbering
-		\AtBeginDocument{%
-		\@ifundefined{c@section}{}{%
+	}
+}
+
+\renewcommand{\@maketitle}{%
+	\noindent
+	{\Large\bfseries\color{GGBold}\@hwtitle}
+	\hfill
+	{\color{GGHeader}\@hwcourse}
+	\hfill
+	{\color{GGHeader}\@hwname}
+	\hfill
+	{\slshape\color{GGHeader}\@hwdate}
+	\bigskip
+}
+
+\let\oldmaketitle\maketitle
+\renewcommand{\maketitle}{\oldmaketitle\thispagestyle{empty}}
+
+\AtBeginDocument{\maketitle}
+
+% --- theorem-like environments ---------------------------------------------
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{claim}[theorem]{Claim}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{notation}[theorem]{Notation}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{note}[theorem]{Note}
+
+% starred versions, unnumbered, for when I don't want them tied to a section
+\theoremstyle{plain}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{corollary*}{Corollary}
+\newtheorem*{proposition*}{Proposition}
+\newtheorem*{conjecture*}{Conjecture}
+\newtheorem*{claim*}{Claim}
+
+\theoremstyle{definition}
+\newtheorem*{definition*}{Definition}
+\newtheorem*{example*}{Example}
+\newtheorem*{notation*}{Notation}
+
+\theoremstyle{remark}
+\newtheorem*{remark*}{Remark}
+\newtheorem*{note*}{Note}
+
+% --- exercise environment ---------------------------------------------------
+
+\newcounter{exercise}[section]
+\renewcommand{\theexercise}{\thesection.\arabic{exercise}}
+
+% if the document never starts a section, fall back to flat numbering
+\AtBeginDocument{%
+	\@ifundefined{c@section}{}{%
 		\ifnum\value{section}=0
-		\renewcommand{\theexercise}{\arabic{exercise}}
+			\renewcommand{\theexercise}{\arabic{exercise}}
 		\fi
-		}
-		}
-		\newenvironment{exercise}[1][]{%
-		\refstepcounter{exercise}%
-		\par\medskip\noindent
-		\ifx\\#1\\%
+	}
+}
+
+\newenvironment{exercise}[1][]{%
+	\refstepcounter{exercise}%
+	\par\medskip\noindent
+	\ifx\\#1\\%
 		\markright{Exercise~\theexercise\ Solution}%
 		\textbf{Exercise~\theexercise.}%
-		\else
+	\else
 		\markright{#1\ Solution}%
 		\textbf{#1.}%
-		\fi
-		\quad
-		}{\par}
-		\newenvironment{exercise*}[1][]{%
-		\par\medskip\noindent
-		\ifx\\#1\\%
+	\fi
+	\quad
+}{\par}
+
+\newenvironment{exercise*}[1][]{%
+	\par\medskip\noindent
+	\ifx\\#1\\%
 		\textbf{Exercise.}%
-		\else
+	\else
 		\textbf{#1.}%
-		\fi
-		\quad
-		}{\par}
-		\RequirePackage{enumitem}
-		\setlist[enumerate]{
-		    label=(\alph*),
-		labelsep=10pt,
-		itemsep=0pt,
-		parsep=2pt,
-		topsep=3pt
-		}
-		\setlist[itemize]{
-		labelsep=10pt,
-		itemsep=0pt,
-		parsep=2pt,
-		topsep=2pt
-		}
-		% --- solution box ------------------------------------------------------
-		\newtcolorbox{solution}{
-		breakable,
-		enhanced,
-		parbox=false,
-		colback=Eggshell!40,
-		colframe=Eggshell!60,
-		colupper=GGText,
-		boxrule=1pt,
-		arc=3pt,
-		left=4pt,
-		right=4pt,
-		top=4pt,
-		bottom=4pt,
-		before skip=\bigskipamount,
-		after skip=\bigskipamount,
-		title={\textbf{Solution}},
-		attach title to upper={\qquad}
-		}
-		% showsolutions=false swallows the box's content instead of skipping it,
-		% so page breaks etc. inside a hidden solution don't get counted
-		\if@showsolutions\else
-		\renewenvironment{solution}{\setbox\z@\vbox\bgroup}{\egroup}
-		\fi
-		% overriding amsthm's \proof to match the exercise/solution spacing
-		\renewenvironment{proof}[1][Proof]{%
-		\par\pushQED{\qed}%
-		\normalfont \topsep6\p@\@plus6\p@\relax
-		\trivlist
-		\item[\hskip\labelsep\itshape #1\@addpunct{.}]\ignorespaces
-		}{%
-		\popQED\endtrivlist\@endpefalse
-		}
-		\newenvironment{proof*}[1][Proof]{%
-		\par
-		\normalfont \topsep6\p@\@plus6\p@\relax
-		\trivlist
-		\item[\hskip\labelsep\itshape #1\@addpunct{.}]\ignorespaces
-		}{%
-		\endtrivlist\@endpefalse
-		}
-		% --- header/footer ---------------------------------------------------------
-		\pagestyle{fancy}
-		\fancyhf{}
-		\fancyhead[C]{\footnotesize\sffamily\color{GGHeader}\rightmark}
-		\fancyhead[L]{\footnotesize\sffamily\color{GGHeader}\MakeUppercase{\@hwtitle}}
-		\fancyhead[R]{\footnotesize\sffamily\color{GGHeader}\@hwname}
-		\fancyfoot[RO,LE]{\footnotesize\sffamily\color{GGHeader}\thepage}
-		\renewcommand{\headrulewidth}{0pt}
-		\renewcommand{\footrulewidth}{0pt}
-		% --- shorthand ---------------------------------------------------------
-		\DeclareMathOperator{\Ima}{Im}
-		\DeclareMathOperator{\Ker}{Ker}
-		\DeclareMathOperator{\rank}{rank}
-		\DeclareMathOperator{\tr}{tr}
-		\DeclareMathOperator{\diag}{diag}
-		\DeclareMathOperator{\sgn}{sgn}
-		\newcommand{\N}{\mathbb{N}}
-		\newcommand{\Z}{\mathbb{Z}}
-		\newcommand{\Q}{\mathbb{Q}}
-		\newcommand{\R}{\mathbb{R}}
-		\newcommand{\C}{\mathbb{C}}
-		\newcommand{\F}{\mathbb{F}}
-		\newcommand{\abs}[1]{\left|#1\right|}
-		\newcommand{\norm}[1]{\left\|#1\right\|}
-		\newcommand{\inner}[1]{\left\langle #1 \right\rangle}
-		\newcommand{\set}[1]{\left\{#1\right\}}
-		\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
-		\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
-	\endinput</code></pre>
-</body>
+	\fi
+	\quad
+}{\par}
+
+\RequirePackage{enumitem}
+\setlist[enumerate]{
+    label=(\alph*),
+	labelsep=10pt,
+	itemsep=0pt,
+	parsep=2pt,
+	topsep=3pt
+}
+
+\setlist[itemize]{
+	labelsep=10pt,
+	itemsep=0pt,
+	parsep=2pt,
+	topsep=2pt
+}
+
+% --- solution box ------------------------------------------------------
+
+\newtcolorbox{solution}{
+	breakable,
+	enhanced,
+	parbox=false,
+	colback=Eggshell!40,
+	colframe=Eggshell!60,
+	colupper=GGText,
+	boxrule=1pt,
+	arc=3pt,
+	left=4pt,
+	right=4pt,
+	top=4pt,
+	bottom=4pt,
+	before skip=\bigskipamount,
+	after skip=\bigskipamount,
+	title={\textbf{Solution}},
+	attach title to upper={\qquad}
+}
+
+% showsolutions=false swallows the box's content instead of skipping it,
+% so page breaks etc. inside a hidden solution don't get counted
+\if@showsolutions\else
+	\renewenvironment{solution}{\setbox\z@\vbox\bgroup}{\egroup}
+\fi
+
+% overriding amsthm's \proof to match the exercise/solution spacing
+\renewenvironment{proof}[1][Proof]{%
+	\par\pushQED{\qed}%
+	\normalfont \topsep6\p@\@plus6\p@\relax
+	\trivlist
+	\item[\hskip\labelsep\itshape #1\@addpunct{.}]\ignorespaces
+}{%
+	\popQED\endtrivlist\@endpefalse
+}
+
+\newenvironment{proof*}[1][Proof]{%
+	\par
+	\normalfont \topsep6\p@\@plus6\p@\relax
+	\trivlist
+	\item[\hskip\labelsep\itshape #1\@addpunct{.}]\ignorespaces
+}{%
+	\endtrivlist\@endpefalse
+}
+
+% --- header/footer ---------------------------------------------------------
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\footnotesize\sffamily\color{GGHeader}\rightmark}
+\fancyhead[L]{\footnotesize\sffamily\color{GGHeader}\MakeUppercase{\@hwtitle}}
+\fancyhead[R]{\footnotesize\sffamily\color{GGHeader}\@hwname}
+\fancyfoot[RO,LE]{\footnotesize\sffamily\color{GGHeader}\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% --- shorthand ---------------------------------------------------------
+
+\DeclareMathOperator{\Ima}{Im}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\sgn}{sgn}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\inner}[1]{\left\langle #1 \right\rangle}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+
+\endinput</code></pre>
+	</body>
 </html>
