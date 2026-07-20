@@ -1,11 +1,21 @@
+% ea-notes.sty -- a personal style for typeset lecture notes.
+%
+% Evan Angelone, 2026.  Sans-serif headings, framed theorem-like
+% environments, and a two-line running header.  Colours are the Mantine
+% palette so the notes match the accompanying web material.
+
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{ea-notes}[2026/05/01 Evan Angelone notes style]
 
-% --- packages ----------------------------------------------------------
 
-\usepackage{amsmath,amssymb}
+% --------------------------------------------------------------------------
+% Packages
+% --------------------------------------------------------------------------
+
+\usepackage{amsmath,amssymb,mathtools}
 \usepackage{blindtext}
 \usepackage[dvipsnames,svgnames,x11names]{xcolor}
+
 \usepackage[
 	colorlinks=true,
 	citecolor=Blue3,
@@ -13,6 +23,30 @@
 	filecolor=violet,
 	urlcolor=violet
 ]{hyperref}
+
+\usepackage[
+	backend=biber,
+	style=numeric,
+	sorting=nyt
+]{biblatex}
+
+\usepackage{needspace}
+\usepackage[nameinlink, capitalize, noabbrev]{cleveref}
+
+% Capitalised names on both \cref and \Cref, so references read the same
+% wherever they land in a sentence.
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{proposition}{Proposition}{Propositions}
+\Crefname{proposition}{Proposition}{Propositions}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{conjecture}{Conjecture}{Conjectures}
+\Crefname{conjecture}{Conjecture}{Conjectures}
+\crefname{example}{Example}{Examples}
+\Crefname{example}{Example}{Examples}
 
 \usepackage[
 	activate={true,nocompatibility},
@@ -33,14 +67,16 @@
 \usepackage{mdframed}
 
 \usepackage{enumitem}
-\setlist[enumerate]{leftmargin=3em}
+\setlist[enumerate]{noitemsep, leftmargin=3em}
+\setlist[itemize]{noitemsep}
 
 \newlist{thmenumerate}{enumerate}{2}
-\setlist[thmenumerate]{label=\sffamily\bfseries\arabic*.}
+\setlist[thmenumerate]{noitemsep, label=\sffamily\bfseries\arabic*.}
 
-% --- colors --------------------------------------------------------------
-% Mantine's default palette, ported over wholesale so a note page can pull
-% whatever shade it needs without me hand-picking RGB triples every time.
+
+% --------------------------------------------------------------------------
+% Colours -- Mantine palette v1.9.1
+% --------------------------------------------------------------------------
 
 \definecolor{white}{RGB}{255, 255, 255}
 \definecolor{black}{RGB}{0, 0, 0}
@@ -188,9 +224,17 @@
 \definecolor{orange-8}{RGB}{232, 89, 12}
 \definecolor{orange-9}{RGB}{217, 72, 15}
 
-% --- theorem-like environments ---------------------------------------------
 
-% frame used by theorem/lemma/proposition/corollary/conjecture
+% --------------------------------------------------------------------------
+% Theorem-like environments
+% --------------------------------------------------------------------------
+
+% One skip above each environment's name and below the bottom of its box,
+% so everything sits on a common vertical grid.
+\newskip\ea@skip
+\ea@skip=\medskipamount
+
+% Fully boxed, for theorem/lemma/etc.
 \mdfdefinestyle{thmstyle}{%
 	topline=true,%
 	bottomline=true,%
@@ -203,10 +247,11 @@
 	innerleftmargin=8pt,%
 	innerrightmargin=8pt,%
 	skipabove=\smallskipamount,%
-	skipbelow=\bigskipamount%
+	skipbelow=\ea@skip,%
+	nobreak=false%
 }
 
-% lighter-weight style for definition/question - just a rule on the left
+% Just a rule down the left, for definition/question.
 \mdfdefinestyle{defstyle}{%
 	topline=false,%
 	bottomline=false,%
@@ -218,17 +263,26 @@
 	innerbottommargin=0pt,%
 	innerleftmargin=8pt,%
 	innerrightmargin=0pt,%
-	skipabove=\bigskipamount,%
-	skipbelow=\bigskipamount%
+	skipabove=\ea@skip,%
+	skipbelow=\ea@skip,%
+	nobreak=false%
 }
 
-% theorem/lemma/proposition/corollary/conjecture share one counter
+% Each numbers on its own; definition and question stay unnumbered.
 \newcounter{theorem}
+\newcounter{lemma}
+\newcounter{proposition}
+\newcounter{corollary}
+\newcounter{conjecture}
 
-\newcommand{\ea@thmheader}[2]{%
+% Heading for the boxed environments: "<Name> <n>" with an optional title.
+% \needspace keeps the heading from being orphaned above its box at a
+% page break.
+\newcommand{\ea@thmheader}[3]{%
 	\def\ea@thmtitle{#2}%
-	\par\bigskip\noindent
-	{\large\sffamily\bfseries\color{gray-9}#1~\thetheorem}%
+	\needspace{6\baselineskip}%
+	\par\vspace{\ea@skip}\noindent
+	{\large\sffamily\bfseries\color{gray-9}#1~\csname the#3\endcsname}%
 	\ifx\ea@thmtitle\@empty\else
 		\hspace{2em}{\large\normalfont\sffamily\color{gray-9}#2}%
 	\fi
@@ -236,27 +290,27 @@
 }
 
 \newenvironment{theorem}[1][]{%
-	\refstepcounter{theorem}\ea@thmheader{Theorem}{#1}%
+	\refstepcounter{theorem}\ea@thmheader{Theorem}{#1}{theorem}%
 	\begin{mdframed}[style=thmstyle]\itshape
 }{\end{mdframed}}
 
 \newenvironment{lemma}[1][]{%
-	\refstepcounter{theorem}\ea@thmheader{Lemma}{#1}%
+	\refstepcounter{lemma}\ea@thmheader{Lemma}{#1}{lemma}%
 	\begin{mdframed}[style=thmstyle]\itshape
 }{\end{mdframed}}
 
 \newenvironment{proposition}[1][]{%
-	\refstepcounter{theorem}\ea@thmheader{Proposition}{#1}%
+	\refstepcounter{proposition}\ea@thmheader{Proposition}{#1}{proposition}%
 	\begin{mdframed}[style=thmstyle]\itshape
 }{\end{mdframed}}
 
 \newenvironment{corollary}[1][]{%
-	\refstepcounter{theorem}\ea@thmheader{Corollary}{#1}%
+	\refstepcounter{corollary}\ea@thmheader{Corollary}{#1}{corollary}%
 	\begin{mdframed}[style=thmstyle]\itshape
 }{\end{mdframed}}
 
 \newenvironment{conjecture}[1][]{%
-	\refstepcounter{theorem}\ea@thmheader{Conjecture}{#1}%
+	\refstepcounter{conjecture}\ea@thmheader{Conjecture}{#1}{conjecture}%
 	\begin{mdframed}[style=thmstyle]\itshape
 }{\end{mdframed}}
 
@@ -278,32 +332,47 @@
 	\par\smallskip\noindent
 }{\end{mdframed}}
 
+% Examples run in the text rather than in a box, with a small-caps label.
 \newcounter{example}
 
 \newenvironment{example}[1][]{%
 	\def\ea@exampletitle{#1}%
 	\refstepcounter{example}%
-	\par\bigskip\noindent
+	\par\vspace{\ea@skip}\noindent
 	{\normalsize\sffamily\bfseries\color{gray-9}EXAMPLE~\theexample}%
 	\ifx\ea@exampletitle\@empty\else
 		\hspace{2em}{\normalsize\normalfont\sffamily\color{gray-9}\ea@exampletitle}%
 	\fi
 	\par\smallskip\noindent\ignorespaces
-}{\par\bigskip}
+}{\par\vspace{\ea@skip}}
 
-\newenvironment{proof}{%
-	\par\bigskip\noindent\textbf{\sffamily PROOF}\quad\ignorespaces
-}{\hfill$\blacksquare$\par\bigskip}
+% Proof: the optional argument (e.g. "of \cref{thm:foo}") sits inline next
+% to the PROOF label in the same style.
+\newenvironment{proof}[1][]{%
+	\def\ea@prooftitle{#1}%
+	\par\vspace{\ea@skip}\noindent
+	\textbf{\sffamily PROOF\ifx\ea@prooftitle\@empty\else\ \ea@prooftitle\fi}%
+	\quad\ignorespaces
+}{\hfill$\blacksquare$\par\vspace{\ea@skip}}
 
-% amsthm's \qedhere assumes a \trivlist-based proof; this one isn't, so
-% just no-op it rather than dragging amsthm in for one macro
 \newcommand{\qedhere}{}
 
-% --- layout ---------------------------------------------------------------
+
+% --------------------------------------------------------------------------
+% Page layout
+% --------------------------------------------------------------------------
+
+% Running header: document title on odd pages, current section on even
+% pages, page number at the right, rule on every page.  \maketitle switches
+% the title page to an empty style.
+\providecommand{\sectionmark}[1]{}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+
+\newcommand{\ea@runningtitle}{\ifodd\value{page}\@title\else\rightmark\fi}
 
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[C]{\small\sffamily\@title}
+\fancyhead[C]{\small\sffamily\ea@runningtitle}
 \fancyhead[R]{\small\sffamily\bfseries\thepage}
 \renewcommand{\headrulewidth}{1pt}
 \setlength{\headheight}{14pt}
@@ -314,13 +383,15 @@
 	\vspace{2\baselineskip}%
 }
 
+% Headings are unnumbered throughout.
+\setcounter{secnumdepth}{-2}
+
 \titleformat{\section}[hang]
 {\Large\sffamily\bfseries\color{black}}
 {\thesection\enspace}
 {0pt}
 {}
 [\vspace{-12pt}\rule{\linewidth}{1pt}]
-
 \titlespacing*{\section}{0pt}{1.5\baselineskip}{0.75\baselineskip}
 
 \titleformat{\subsection}[hang]
@@ -329,11 +400,28 @@
 {0pt}
 {}
 [\vspace{0pt}]
-
 \titlespacing*{\subsection}{0pt}{\baselineskip}{0.5\baselineskip}
+
+% Subsubsections match, one size down, and run into the following text.
+\titleformat{\subsubsection}[runin]
+{\normalsize\sffamily\bfseries\color{black}}
+{\thesubsubsection\enspace}
+{0pt}
+{}
+\titlespacing*{\subsubsection}{0pt}{0.75\baselineskip}{1em}
 
 \AtBeginDocument{\color{gray-9}}
 
-% --- misc commands ----------------------------------------------------------
 
+% --------------------------------------------------------------------------
+% Shorthands
+% --------------------------------------------------------------------------
+
+\newcommand{\defeq}{\mathrel{\smash{\stackrel{\text{\tiny def}}{=}}}}
+\newcommand{\ie}{{\slshape i.\,e.}}
+
+% Emphasis is bold sans here, to sit with the heading style.
 \renewcommand{\emph}[1]{{\bfseries\sffamily\boldmath\color{gray-9}#1}}
+
+\newcommand{\definemathbb}[1]{\csdef{#1}{\mathbb{#1}}}
+\forcsvlist{\definemathbb}{N,Z,Q,R,C,F,E}

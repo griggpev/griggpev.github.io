@@ -422,7 +422,6 @@ h1 {
 .photo,
 .bio-photo {
   width: 100%;
-  border: 1px solid var(--rule);
   filter: grayscale(100%);
   transition: filter 0.4s ease;
 }
@@ -530,8 +529,8 @@ h1 {
 /* 2 — face lattice (Hasse diagram), unlabelled. */
 .face-lattice path { stroke: var(--text); stroke-width: 1; fill: none; opacity: 0.85; transition: stroke 0.25s ease; }
 .face-lattice circle { fill: var(--text); transition: fill 0.25s ease; }
-.graph-item:hover .face-lattice path { stroke: var(--accent); }
-.graph-item:hover .face-lattice circle { fill: var(--accent); }
+.graph-item:hover .face-lattice path { stroke: var(--section-head); }
+.graph-item:hover .face-lattice circle { fill: var(--section-head); }
 
 /* 3 — flag graph; edges labelled 0/1/2 = dashed / solid / double. Each polytope
       vertex is a regular polygon; the four inner cycles are regular, equal-area.

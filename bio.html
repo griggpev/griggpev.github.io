@@ -45,7 +45,7 @@
 			<div class="content-row">
 				<div class="bio-text">
 					<p>
-						I was born in Las Vegas, Nevada and lived briefly in Nederland, Colorado before finally moving to Raritan, New Jersey where I'd spend the next 20 years or so. Growing up, math never really interested me as I much preferred MMOs and old movies to schoolwork. In fact, my very low grades throughout all of primary, middle, and highschool reflected that&mdash;I got into a lot of trouble and nearly dropped out a few times. When I somehow floundered my way into an AP calculus course my senior year (despite having neither any desire nor plan to go to college), my then-teacher, <a href="https://people.njit.edu/profile/sk466" target="_blank" rel="noopener">Dr. (Steve) Kane</a>, believed I was capable of more. Being <i>seen</i> supplied me with reasons to <i>try</i>.
+						I was born in Las Vegas, Nevada and lived briefly in Nederland, Colorado before finally moving to Raritan, New Jersey where I'd spend the next 20 years or so. Growing up, math never really interested me as I much preferred MMOs and old movies to schoolwork. In fact, my very low grades throughout all of primary, middle, and highschool reflected that&mdash;I got into a lot of trouble and nearly dropped out a few times. When I somehow floundered my way into an AP calculus course my senior year (despite having neither any desire nor plan to go to college), my then-teacher, <a href="https://people.njit.edu/profile/sk466" target="_blank" rel="noopener">Dr. (Steve) Kane</a>, believed I was capable of more. Being <i>seen</i> supplied me with reasons to <i>try</i>. That one could so easily be amenable to change merely by being seen was&mdash;and still remains to me today&mdash;the most important lesson I had ever learned.
 					</p>
 					<p>
 						I was a first-generation college student starting at my local community college. After two years, I had the option of joining my friends in transferring to Rutgers or NJIT to earn my bachelor's, but my family's path led west to Oregon. Coincidentally, I had recently heard about an alternative liberal arts school in Portland called Reed College, and so the list of things pulling me westward kept growing. With a letter from Doc Kane, I would end up attending Reed 3,000 miles away from the life I'd had before. The intensity of Reed's liberal arts education shaped who I am today. I came to understand math as an intrinsically humane and communal endeavor, not unlike storytelling or music.
@@ -55,8 +55,9 @@
 					</p>
 					<ul class="hobby-list">
 						<li>Cooking stews (borscht is my favorite!) and smoking salmon</li>
-						<li>Collecting and appreciating niche perfumes</li>
+						<li>Collecting and appreciating niche perfumes (<a href="https://www.fragrantica.com/@griggpev" target="_blank" rel="noopener">my Fragrantica profile</a>)</li>
 						<li>Rock climbing (I'm an OK boulderer at V7 but I've mainly enjoyed 5.12+ on rope)</li>
+						<li>Exploring nature with my family</li>
 						<li>Snuggling with my corgi-lab mix, Luna (you'll find some pictures of her on this page if you're lucky)</li>
 						<li>Drinking Laphroaig</li>
 						<li>Sudoku (I hold the world's 9th fastest time for an impossible puzzle on <a href="https://www.playgoodsudoku.com/" target="_blank" rel="noopener">Good Sudoku</a> at 21 seconds)</li>
@@ -72,9 +73,21 @@
 			</div>
 		</main>
 		<script>
-			// Pick a random available photo from bio-photos/ and caption it.
-			const maxBioPhotos = 35;
-			const bioPhotoExtensions = ["jpg", "jpeg", "png", "webp"];
+			// Pick a random photo from bio-photos/ and caption it.
+			// Extensions are listed explicitly (rather than probed over the
+			// network) so the page only ever fetches the one chosen photo.
+			const bioPhotos = [
+				{ n: 1, ext: "jpeg" }, { n: 2, ext: "jpeg" }, { n: 3, ext: "jpeg" },
+				{ n: 4, ext: "jpeg" }, { n: 5, ext: "jpeg" }, { n: 6, ext: "jpeg" },
+				{ n: 7, ext: "jpeg" }, { n: 8, ext: "jpeg" }, { n: 9, ext: "jpeg" },
+				{ n: 10, ext: "jpeg" }, { n: 11, ext: "jpeg" }, { n: 12, ext: "jpeg" },
+				{ n: 13, ext: "jpeg" }, { n: 14, ext: "jpeg" }, { n: 15, ext: "jpeg" },
+				{ n: 16, ext: "jpeg" }, { n: 17, ext: "jpeg" }, { n: 18, ext: "jpeg" },
+				{ n: 19, ext: "jpeg" }, { n: 20, ext: "jpeg" }, { n: 21, ext: "jpeg" },
+				{ n: 22, ext: "jpeg" }, { n: 23, ext: "jpeg" }, { n: 24, ext: "jpeg" },
+				{ n: 25, ext: "jpeg" }, { n: 26, ext: "jpeg" }, { n: 27, ext: "jpeg" },
+				{ n: 28, ext: "jpeg" }, { n: 29, ext: "png" },
+			];
 			const bioPhotoCaptions = {
 				1: "Canon Beach, Oregon.",
 				2: "Portland, Oregon and her Mount Hood.",
@@ -106,31 +119,10 @@
 				28: "A 2,500 year-old Etruscan dodecahedron makes an appearance in Disney's Andor.",
 				29: "The affine group AGL(1,8) realizes a chiral map."
 			};
-			function probePhoto(n, extIndex) {
-				return new Promise((resolve) => {
-					if (extIndex >= bioPhotoExtensions.length) {
-						resolve(null);
-						return;
-					}
-					const src = `bio-photos/${n}.${bioPhotoExtensions[extIndex]}`;
-					const img = new Image();
-					img.onload = () => resolve(src);
-					img.onerror = () => resolve(probePhoto(n, extIndex + 1));
-					img.src = src;
-				});
-			}
-			async function loadRandomBioPhoto() {
-				const found = [];
-				for (let n = 1; n <= maxBioPhotos; n++) {
-					const src = await probePhoto(n, 0);
-					if (!src) break;
-					found.push({ n, src });
-				}
-				if (found.length > 0) {
-					const choice = found[Math.floor(Math.random() * found.length)];
-					document.getElementById("bio-photo").src = choice.src;
-					document.getElementById("bio-photo-caption").innerHTML = bioPhotoCaptions[choice.n] || "";
-				}
+			function loadRandomBioPhoto() {
+				const choice = bioPhotos[Math.floor(Math.random() * bioPhotos.length)];
+				document.getElementById("bio-photo").src = `bio-photos/${choice.n}.${choice.ext}`;
+				document.getElementById("bio-photo-caption").innerHTML = bioPhotoCaptions[choice.n] || "";
 			}
 			loadRandomBioPhoto();
 		</script>
