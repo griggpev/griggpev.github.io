@@ -1,3 +1,14 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   Evan Angelone — griggpev.github.io
+
+   Every page is the same shell: a sidebar rail, then a <main> holding a
+   heading, some sections, and optionally a .side-visual (a photo column).
+   All of the wiring lives here; the pages carry markup only. site.js adds
+   the four behaviours that CSS can't express — mode switch, mobile nav,
+   animated <details>, and the random bio photo.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+
 /* ── Fonts ────────────────────────────────────────────── */
 
 @font-face {
@@ -61,8 +72,7 @@
   /* type hierarchy */
   --section-head:  #1A1813;
   --entry-title:   #454035;
-  --text:          #6A6456;
-  --muted:         #6A6456;
+  --text:          #6A6456;   /* body copy and every secondary line */
 
   /* accents */
   --accent:        #BF995D;   /* Reed "Golden Laurel" */
@@ -80,21 +90,20 @@
   --mono:          'TT2020', monospace;
 
   /* layout */
+  --icon:          40px;    /* home mark in the rail */
   --sidebar-w:     236px;
-  --sidebar-collapsed: 104px;  /* thin rail: 40px icon + 2rem padding each side */
-  --content-max:   880px;
+  --sidebar-rail:  calc(var(--icon) + 4rem);   /* collapsed: icon + 2rem padding a side */
   --photo-col:     clamp(200px, 24vw, 340px);  /* bio photo / side-visual column */
-  --col-gap:       3.5rem;                      /* gap between text and photo */
+  --col-gap:       3.5rem;  /* gap between the text and photo columns */
   --text-col:      39rem;   /* text-column width — font-independent so the
                                heading and body align to the same left edge */
+  --seq-frame-h:   280px;   /* height cap per frame in a multi-frame bio photo */
 }
 
 
 /* ── Reset & base ─────────────────────────────────────── */
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--sans);
@@ -108,7 +117,7 @@ body {
 }
 
 /* Ease the surface/text swap when toggling light ↔ dark. */
-body, .sidebar, main, footer {
+body, .sidebar, main {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -130,53 +139,58 @@ a:hover {
 
 
 /* ── Sidebar ───────────────────────────────────────────────
-   A fixed left rail: home mark at the top, vertical nav and the
-   dark/light switch in the middle, contact pinned to the bottom.
-   On the sidebar it reads as a slightly raised surface (--card-bg). */
+   A left rail: home mark at the top, vertical nav and the dark/light
+   switch in the middle, contact pinned to the bottom. The two media
+   queries at the end of this file split the whole viewport range between
+   them, so anything they both set (width, position, overflow) is left out
+   here rather than declared and immediately overridden. */
 
 .sidebar {
-  flex: 0 0 var(--sidebar-w);
-  width: var(--sidebar-w);
   background: var(--card-bg);
   border-right: 1px solid var(--rule);
   padding: 2.75rem 2rem;
   display: flex;
   flex-direction: column;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
 }
 
-/* Home mark — the pencil-owl icon, larger than in the top-bar days. */
-.sidebar .nav-name {
-  display: inline-flex;
-  align-items: center;
-  color: var(--muted);
-  border: none;
-  margin-bottom: 2.5rem;
-}
-
-.sidebar .nav-name .icon-wrap {
+/* Home mark — the pencil-owl, painted as two CSS masks so it stays
+   themeable (it takes --accent) and lives in one place instead of being
+   pasted into every page as inline SVG. ::before is the outline drawing,
+   ::after the solid one it cross-fades into on hover. */
+.nav-name {
+  display: block;
   position: relative;
-  display: inline-block;
-  width: 40px;
-  height: 40px;
+  flex: none;
+  width: var(--icon);
+  height: var(--icon);
+  margin-bottom: 2.5rem;
+  border: none;
 }
 
-.sidebar .nav-name .icon-wrap svg {
+.nav-name::before,
+.nav-name::after {
+  content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 40px;
-  height: 40px;
-  fill: var(--accent);
+  inset: 0;
+  background: var(--accent);
+  -webkit-mask: center / contain no-repeat;
+          mask: center / contain no-repeat;
   transition: opacity 0.2s ease;
 }
 
-.sidebar .nav-name .icon-hover { opacity: 0; }
-.sidebar .nav-name:hover .icon-default { opacity: 0; }
-.sidebar .nav-name:hover .icon-hover { opacity: 1; }
+.nav-name::before {
+  -webkit-mask-image: url('icons/owl-outline.svg');
+          mask-image: url('icons/owl-outline.svg');
+}
+
+.nav-name::after {
+  -webkit-mask-image: url('icons/owl-solid.svg');
+          mask-image: url('icons/owl-solid.svg');
+  opacity: 0;
+}
+
+.nav-name:hover::before { opacity: 0; }
+.nav-name:hover::after  { opacity: 1; }
 
 /* The middle column: nav at top, contact pushed to the bottom. */
 .sidebar-nav {
@@ -193,11 +207,10 @@ a:hover {
 }
 
 .nav-links a {
-  font-family: var(--sans);
   font-size: 0.8rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--text);
   padding: 0.55rem 0 0.55rem 0.85rem;
   margin-left: -0.9rem;
   border: none;
@@ -211,6 +224,8 @@ a:hover {
   border-left-color: var(--accent);
 }
 
+/* Menu button — three bars from one <span>: the span is the middle bar,
+   its pseudo-elements the outer two. Opening folds them into an X. */
 .hamburger {
   display: none;
   background: none;
@@ -222,29 +237,28 @@ a:hover {
   margin-left: auto;
 }
 
-.hamburger span {
-  display: block;
+.hamburger span,
+.hamburger span::before,
+.hamburger span::after {
+  position: absolute;
+  left: 0;
   width: 100%;
   height: 2px;
   background: var(--section-head);
-  position: absolute;
-  left: 0;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-.hamburger span:nth-child(1) { top: 0; }
-.hamburger span:nth-child(2) { top: 9px; }
-.hamburger span:nth-child(3) { top: 18px; }
+.hamburger span { top: 9px; }
+.hamburger span::before { content: ""; top: -9px; }
+.hamburger span::after  { content: ""; top: 9px; }
 
 /* Contact block, pinned to the bottom of the rail. */
 .contact {
   margin-top: 2.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--rule);
-  font-family: var(--sans);
   font-size: 0.78rem;
   line-height: 1.85;
-  color: var(--muted);
 }
 
 .contact strong {
@@ -259,20 +273,25 @@ a:hover {
 }
 
 .contact a {
-  color: var(--muted);
+  color: var(--text);
   border: none;
 }
 
 .contact a:hover { color: var(--accent); }
 
-.contact .contact-emails { margin-bottom: 0.9rem; }
+.contact-emails { margin-bottom: 0.9rem; }
 
-.contact .email-link { font-family: var(--mono); font-size: 0.72rem; color: var(--link-blue); }
+/* Address lines take the accent on hover; the emails stay blue in both
+   states, so they read as addresses rather than as site navigation. */
+.contact .email-link,
+.contact .email-link:hover {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--link-blue);
+}
 
-.contact .email-link:hover { color: var(--link-blue); border-bottom-color: var(--link-blue); }
 
-
-/* ── Dark/light slider switch (injected into .nav-links) ─── */
+/* ── Dark/light slider switch (site.js injects it into .nav-links) ─── */
 
 .mode-toggle {
   display: inline-flex;
@@ -296,18 +315,17 @@ a:hover {
   border-radius: 13px;
   background: var(--bg);
   border: 1px solid var(--rule);
-  box-sizing: border-box;
   transition: border-color 0.25s ease;
 }
 
 .mode-toggle:hover .mode-track {
-  border-color: var(--muted);
+  border-color: var(--text);
 }
 
-.mode-track .mode-ico {
+.mode-ico {
   font-size: 12px;
   line-height: 1;
-  color: var(--muted);
+  color: var(--text);
 }
 
 .mode-thumb {
@@ -329,32 +347,21 @@ a:hover {
 }
 
 
-/* ── Main column ──────────────────────────────────────── */
+/* ── Main column ──────────────────────────────────────────
+   Mobile stacks everything in one column; the desktop query below turns
+   <main> into the two-track page grid. */
 
 main {
   flex: 1 1 auto;
   min-width: 0;
-  max-width: calc(var(--content-max) + 12vw);
-  padding: 5rem clamp(1.5rem, 6vw, 6rem) 2.5rem;
   display: flex;
   flex-direction: column;
+  padding: 5rem 0 2.5rem;
   animation: fadeUp 0.8s ease both;
 }
 
 
-/* ── Page intro (eyebrow → title → subtitle) ──────────── */
-
-.page-intro { margin-bottom: 3rem; }
-
-.eyebrow {
-  font-family: var(--sans);
-  font-size: 0.72rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 1.1rem;
-}
+/* ── Headings ─────────────────────────────────────────── */
 
 h1 {
   font-family: var(--serif-display);
@@ -363,64 +370,175 @@ h1 {
   line-height: 1.04;
   letter-spacing: -0.02em;
   color: var(--section-head);
+  margin-bottom: 3.5rem;
+}
+
+h2 {
+  font-family: var(--serif-display);
+  font-size: 1.9rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--section-head);
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-family: var(--serif-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--entry-title);
   margin-bottom: 0.5rem;
 }
 
-.subtitle {
-  font-family: var(--serif-paper);
-  font-style: italic;
-  font-size: 1.15rem;
-  line-height: 1.5;
-  color: var(--muted);
+/* Sections after the first are separated by a rule that sits in the gap,
+   so pages don't have to carry an <hr> between them. */
+section { margin-top: 2.75rem; }
+
+section + section {
+  border-top: 1px solid var(--rule);
+  padding-top: 2.5rem;
 }
 
-.page-intro .subtitle { margin-top: 0.35rem; }
 
+/* ── Collapsible sections ─────────────────────────────── */
 
-/* ── Two-column content (prose + side visual) ─────────── */
-
-.content-row {
-  display: grid;
-  grid-template-columns: 1fr var(--photo-col);
-  column-gap: var(--col-gap);
-  align-items: start;
-}
-
-/* Groups the prose and the graph row into one grid item, independent of
-   the photo column's height — otherwise a taller photo would push the
-   graphs down via the shared row track instead of the paragraph gap. */
-.text-col {
+.collapsible summary {
   display: flex;
-  flex-direction: column;
-  /* Matches .bio-text p + p, so the graph row reads as one more paragraph. */
-  gap: 1.4rem;
-  max-width: var(--text-col);
-  /* Center within the wide text cell so the slack splits evenly to
-     either side — roughly halving the gap to the photo column. */
-  justify-self: center;
-}
-
-.bio-text {
-  font-size: 1.06rem;
-  line-height: 1.78;
-  /* Needed on pages like bio.html, where .bio-text is content-row's direct
-     grid item (no .text-col wrapper) — without it, the default grid
-     stretch lets it fill the whole column instead of matching h1's width. */
-  max-width: var(--text-col);
-  justify-self: center;
-}
-
-.bio-text p + p { margin-top: 1.4rem; }
-
-.side-visual {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
+  gap: 0.6rem;
+  cursor: pointer;
+  list-style: none;
 }
+
+.collapsible summary::-webkit-details-marker { display: none; }
+
+.collapsible summary h2 { margin-bottom: 0; }
+
+.collapsible summary::before {
+  content: "▸";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  color: var(--accent);
+  transition: transform 0.25s ease;
+}
+
+.collapsible[open] summary::before { transform: rotate(90deg); }
+
+/* Without JS the content sits directly under the summary. With it, site.js
+   wraps the content in .collapsible-content and transitions its height, so
+   the gap below the summary moves inside the wrapper and collapses with it. */
+.collapsible > *:not(summary) { margin-top: 1rem; }
+
+.collapsible > .collapsible-content {
+  margin-top: 0;
+  overflow: hidden;
+}
+
+.collapsible-content > *:first-child { margin-top: 1rem; }
+
+
+/* ── Entry lists ──────────────────────────────────────────
+   One list pattern for papers, talks, courses and mentees: a title row
+   (.entry-head, with any tags pushed to its right edge) over one or more
+   detail lines. Talks and papers lead their sections, so .is-lead gives
+   them a larger title and more air. */
+
+.entry-list { list-style: none; }
+
+.entry-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.entry-list li:last-child { border-bottom: none; }
+
+.entry-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  font-family: var(--serif-paper);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--entry-title);
+  margin-bottom: 0.4rem;
+}
+
+.entry-meta { font-size: 0.88rem; }
+
+.entry-list.is-lead li { padding: 1.25rem 0; }
+
+.entry-list.is-lead .entry-head {
+  font-size: 1.15rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Short explanatory paragraph, either under an entry or under an h3. */
+.blurb {
+  font-size: 0.95rem;
+  max-width: 680px;
+}
+
+.entry-list .blurb { margin-top: 0.5rem; }
+
+/* Standing under an h3 rather than an entry, it carries the section. */
+.subsection > .blurb { font-size: 0.98rem; margin-bottom: 1rem; }
+
+
+/* ── Tags ─────────────────────────────────────────────────
+   Semesters, years, roles and links to slides or arXiv all read as tags;
+   .tag-group holds them together at the right edge of an .entry-head. */
+
+.tag {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--text);
+  padding: 0.12rem 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.tag-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  gap: 0.4rem;
+}
+
+a.tag { color: var(--accent); }
+a.tag:hover { border-color: var(--accent); }
+
+
+/* ── Subsections (mentorship programs, style files) ───── */
+
+.subsection { margin-bottom: 2.5rem; }
+.subsection:last-child { margin-bottom: 0; }
+
+/* A list needs a touch more air under its heading than a paragraph does
+   (margins collapse here, so this is the total gap, not an addition). */
+.subsection > h3 + .entry-list { margin-top: 1rem; }
+
+.footnote {
+  margin-top: 0.75rem;
+  font-size: 0.78rem;
+}
+
+
+/* ── Side visual (portrait, bio photos) ───────────────── */
 
 .photo,
 .bio-photo {
+  display: block;   /* no baseline gap under the image */
   width: 100%;
   filter: grayscale(100%);
   transition: filter 0.4s ease;
@@ -433,45 +551,98 @@ h1 {
 }
 
 /* Bio photos: fixed width, original aspect ratio (height follows the image). */
-.bio-photo {
-  height: auto;
-  display: block;
-}
+.bio-photo { height: auto; }
 
 .photo:hover,
 .bio-photo:hover { filter: grayscale(0%); }
 
-.bio-photo-figure { margin: 0; width: 100%; }
+.bio-photo-figure { width: 100%; }
+
+/* A multi-frame bio photo: several images that read as one picture, stacked
+   top to bottom in order. Three full-width portraits would run past 1300px
+   and leave the photo column scrolling well beyond the bio text, so each
+   frame is capped by height instead. Width follows the aspect ratio and the
+   frame centers in the column, which keeps the whole image visible rather
+   than cropping it to fit. */
+.bio-photo-frames.is-sequence {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+}
+
+.bio-photo-frames.is-sequence .bio-photo {
+  width: auto;
+  max-width: 100%;
+  max-height: var(--seq-frame-h);
+}
+
+/* Hovering any frame reveals the whole sequence, since it is one picture. */
+.bio-photo-frames.is-sequence:hover .bio-photo { filter: grayscale(0%); }
 
 .bio-photo-caption {
   margin-top: 0.6rem;
-  font-family: var(--sans);
   font-size: 0.8rem;
   font-style: italic;
-  color: var(--muted);
   text-align: center;
 }
 
-/* Cyclic-polytope figures — directly beneath the body text, in the same
-   column (not spanning the photo column). */
+
+/* ── Body text ────────────────────────────────────────── */
+
+.bio-text {
+  font-size: 1.06rem;
+  line-height: 1.78;
+}
+
+.bio-text p + p { margin-top: 1.4rem; }
+
+/* Groups the prose and the figure row into one page-grid item, independent
+   of the photo column's height — otherwise a taller photo would push the
+   figures down via the shared row track instead of the paragraph gap. The
+   flex gap matches .bio-text p + p, so the figures read as one more
+   paragraph. */
+.text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.hobby-list {
+  margin-top: 1.5rem;
+  list-style: none;
+  columns: 2;
+  column-gap: 2.5rem;
+}
+
+.hobby-list li {
+  position: relative;
+  padding-left: 1rem;
+  margin-bottom: 0.9rem;
+  break-inside: avoid;
+}
+
+.hobby-list li::before {
+  content: "\2013";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+
+/* ── Cyclic-polytope figures (home page) ──────────────── */
+
 .polytope-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
   gap: 1.5rem 2.75rem;
-  margin: 0 0 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-/* Each figure + its hidden-until-hover caption. Overflow stays visible so
-   the hover zoom isn't clipped; z-index lifts it above its neighbours. */
-.graph-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow: visible;
-  position: relative;
-}
+/* Each figure sits in its own box so hover covers the whole figure and not
+   just the painted strokes; z-index lifts the zoomed one above its
+   neighbours (it works without positioning — the box is a flex item). */
 .graph-item:hover { z-index: 5; }
 
 .polytope-row svg {
@@ -484,32 +655,8 @@ h1 {
   transform-origin: center;
   transition: transform 0.25s ease;
 }
+
 .graph-item:hover svg { transform: scale(1.15); }
-
-.aut-display { color: var(--accent); font-size: 1.3rem; white-space: nowrap; }
-
-/* Caption is tucked just behind/under the figure (pulled up, invisible) and
-   on hover slides down into its resting place while fading in — a slide,
-   not a clipped reveal, and it's absolutely positioned so it never affects
-   the row's layout or its neighbours. */
-.graph-caption {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  padding-top: 0.6rem;
-  text-align: center;
-  font-family: var(--serif-paper);
-  font-style: italic;
-  font-size: 0.85rem;
-  color: var(--muted);
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-.graph-item:hover .graph-caption { opacity: 1; transform: translateY(0); }
 
 /* 1 — edge graph (Schlegel layout): a triangular bipyramid (base 1,3,5;
    apexes 2,4), projected through facet {1,4,5}, with the light co-located
@@ -551,301 +698,19 @@ h1 {
 .graph-item:hover .flag-graph .e2-double { opacity: 0; }
 .graph-item:hover .flag-graph .e2-single { opacity: 0.9; stroke: var(--edge-red); }
 
-/* r_0, r_1, r_2 in the flag-graph caption — same colors as the edges they label. */
-.graph-caption .r0 { color: var(--edge-green); }
-.graph-caption .r1 { color: var(--edge-blue); }
-.graph-caption .r2 { color: var(--edge-red); }
 
+/* ── Buttons ──────────────────────────────────────────────
+   Outlined links to a file: the leading icon is a CSS mask tinted with
+   currentColor, so the pages carry no inline SVG. */
 
-/* ── Sections & headings ──────────────────────────────── */
-
-section {
-  margin-top: 2.75rem;
-}
-
-.section-rule {
-  border: none;
-  border-top: 1px solid var(--rule);
-  width: 100%;
-  margin: 0 0 2.5rem;
-}
-
-h2 {
-  font-family: var(--serif-display);
-  font-size: 1.9rem;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--section-head);
-  margin-bottom: 1rem;
-}
-
-.research-intro {
-  font-size: 1.08rem;
-  line-height: 1.78;
-  max-width: 68ch;
-}
-
-
-/* ── Collapsible sections ─────────────────────────────── */
-
-.collapsible summary {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  cursor: pointer;
-  list-style: none;
-}
-
-.collapsible summary::-webkit-details-marker { display: none; }
-
-.collapsible summary h2 { margin-bottom: 0; }
-
-.collapsible summary::before {
-  content: "▸";
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 1rem;
-  height: 1rem;
-  font-size: 0.85rem;
-  line-height: 1;
-  color: var(--accent);
-  transition: transform 0.25s ease;
-}
-
-.collapsible[open] summary::before { transform: rotate(90deg); }
-
-.collapsible > *:not(summary) { margin-top: 1rem; }
-
-/* theme-toggle.js wraps a dropdown's content in .collapsible-content and
-   transitions its height/opacity so it animates open AND closed. The gap
-   below the summary lives on the inner content so it collapses with it. */
-.collapsible > .collapsible-content {
-  margin-top: 0;
-  overflow: hidden;
-}
-
-.collapsible-content > *:first-child { margin-top: 1rem; }
-
-
-/* ── Tags (shared) ────────────────────────────────────── */
-
-.tag,
-.semester,
-.course-detail,
-.role-badge {
-  display: inline-block;
-  font-family: var(--sans);
-  font-size: 0.72rem;
-  font-weight: 400;
-  color: var(--muted);
-  padding: 0.12rem 0.5rem;
-  border: 1px solid var(--rule);
-  border-radius: 3px;
-  margin-left: 0.5rem;
-  vertical-align: middle;
-  transition: color 0.2s ease, border-color 0.2s ease;
-}
-
-.tag-group {
-  display: inline-flex;
-  flex-wrap: wrap;
-  flex-shrink: 0;
-  gap: 0.4rem;
-}
-
-.tag-group .tag,
-.tag-group .semester,
-.tag-group .course-detail,
-.tag-group .role-badge { margin-left: 0; }
-
-a.tag { color: var(--accent); }
-a.tag:hover { border-color: var(--accent); }
-
-
-/* ── Papers ───────────────────────────────────────────── */
-
-.paper-list { list-style: none; }
-
-.paper-list li {
-  padding: 1.25rem 0;
-  border-bottom: 1px solid var(--rule);
-}
-
-.paper-list li:last-child { border-bottom: none; }
-
-.paper-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.75rem;
-  font-family: var(--serif-paper);
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--entry-title);
-  margin-bottom: 0.25rem;
-}
-
-.paper-meta {
-  font-family: var(--sans);
-  font-size: 0.88rem;
-  color: var(--muted);
-}
-
-.paper-abstract {
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
-  color: var(--muted);
-  max-width: 680px;
-}
-
-
-/* ── Courses ──────────────────────────────────────────── */
-
-.course-list { list-style: none; }
-
-.course-list li {
-  padding: 0.85rem 0;
-  border-bottom: 1px solid var(--rule);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0;
-}
-
-.course-list li:last-child { border-bottom: none; }
-
-.course-name {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.75rem;
-  font-family: var(--serif-paper);
-  font-size: 0.98rem;
-  font-weight: 700;
-  color: var(--entry-title);
-  width: 100%;
-  margin-bottom: 0.15rem;
-}
-
-.course-info {
-  font-family: var(--sans);
-  font-size: 0.88rem;
-  color: var(--muted);
-}
-
-
-/* ── Mentorship ───────────────────────────────────────── */
-
-.program-block { margin-bottom: 2.5rem; }
-.program-block:last-child { margin-bottom: 0; }
-
-.program-block h3 {
-  font-family: var(--serif-display);
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: var(--entry-title);
-  margin-bottom: 1rem;
-}
-
-.program-note {
-  margin-top: 0.75rem;
-  font-family: var(--sans);
-  font-size: 0.78rem;
-  color: var(--muted);
-}
-
-.mentee-list { list-style: none; }
-
-.mentee-list li {
-  padding: 0.85rem 0;
-  border-bottom: 1px solid var(--rule);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0;
-}
-
-.mentee-list li:last-child { border-bottom: none; }
-
-.mentee-topic {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.75rem;
-  font-family: var(--serif-paper);
-  font-size: 0.98rem;
-  font-weight: 700;
-  color: var(--entry-title);
-  width: 100%;
-  margin-bottom: 0.15rem;
-}
-
-.mentee-info {
-  font-family: var(--sans);
-  font-size: 0.88rem;
-  color: var(--muted);
-}
-
-
-/* ── Resources ────────────────────────────────────────── */
-
-.resource-block { margin-bottom: 2.5rem; }
-.resource-block:last-child { margin-bottom: 0; }
-
-.resource-block h3 {
-  font-family: var(--serif-display);
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: var(--entry-title);
-  margin-bottom: 0.5rem;
-}
-
-.resource-blurb {
-  font-size: 0.98rem;
-  color: var(--muted);
-  max-width: 680px;
-  margin-bottom: 1rem;
-}
-
-
-/* ── Hobbies (bio) ────────────────────────────────────── */
-
-.hobby-list {
-  margin-top: 1.5rem;
-  padding-left: 0;
-  list-style: none;
-  columns: 2;
-  column-gap: 2.5rem;
-}
-
-.hobby-list li {
-  position: relative;
-  padding-left: 1rem;
-  margin-bottom: 0.9rem;
-  break-inside: avoid;
-}
-
-.hobby-list li::before {
-  content: "\2013";
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-}
-
-
-/* ── Downloads ────────────────────────────────────────── */
-
-.download-row {
+.btn-row {
   display: flex;
   gap: 1.5rem;
   flex-wrap: wrap;
   align-items: flex-start;
 }
 
-.download-btn {
+.btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -853,61 +718,63 @@ a.tag:hover { border-color: var(--accent); }
   color: var(--accent);
   border: 1px solid var(--rule);
   border-radius: 4px;
-  font-family: var(--sans);
   font-size: 0.9rem;
   transition: border-color 0.25s ease;
 }
 
-.download-btn:hover { border-color: var(--accent); }
+.btn:hover { border-color: var(--accent); }
 
-.download-btn svg {
+.btn::before {
+  content: "";
   width: 16px;
   height: 16px;
-  fill: currentColor;
+  background: currentColor;
+  -webkit-mask: center / contain no-repeat;
+          mask: center / contain no-repeat;
+}
+
+.btn.is-download::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z'/%3E%3C/svg%3E");
+}
+
+.btn.is-source::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z'/%3E%3C/svg%3E");
+}
+
+.btn.is-view::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5c-5 0-9 4.5-9 7s4 7 9 7 9-4.5 9-7-4-7-9-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-6.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5c-5 0-9 4.5-9 7s4 7 9 7 9-4.5 9-7-4-7-9-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-6.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z'/%3E%3C/svg%3E");
 }
 
 
-/* ── Source-code viewer (files/*-source.html) ─────────── */
+/* ── Source-code viewer (files/*-source.html) ─────────────
+   No rail on these pages, so the shared body flexbox has to stack rather
+   than sit beside a sidebar, and the desktop rail gutters don't apply. */
+
+.code-view {
+  flex-direction: column;
+  padding: 0;
+}
 
 .code-view-header {
   padding: 1.5rem 2rem 1rem;
   font-family: var(--mono);
   font-size: 0.85rem;
-  color: var(--muted);
   border-bottom: 1px solid var(--rule);
 }
 
 .code-view-pre {
   flex: 1;
-  margin: 0;
   padding: 1.5rem 2rem;
   font-family: var(--mono);
   font-size: 0.82rem;
   line-height: 1.6;
-  color: var(--text);
   background: var(--card-bg);
   overflow-x: auto;
   white-space: pre;
 }
-
-
-/* ── Divider & footer ─────────────────────────────────── */
-
-.divider {
-  height: 1px;
-  background: var(--rule);
-  margin: 4rem 0 1.75rem;
-}
-
-footer {
-  margin-top: auto;
-  font-family: var(--sans);
-  font-size: 0.76rem;
-  color: var(--muted);
-}
-
-footer a { color: var(--muted); }
-footer a:hover { color: var(--section-head); border-bottom-color: currentColor; }
 
 
 /* ── Animation ────────────────────────────────────────── */
@@ -922,68 +789,45 @@ footer a:hover { color: var(--section-head); border-bottom-color: currentColor; 
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.stagger-1 { animation-delay: 0.1s; }
 
+/* ── Desktop: page grid + peek sidebar ────────────────────
+   <main> becomes two tracks — prose on the left, the photo column on the
+   right — and every page uses it. Text-only pages simply leave the second
+   track empty, which is what keeps the left edge of the prose identical
+   from page to page.
 
-/* ── Peek sidebar (desktop) ────────────────────────────────
-   The rail collapses to a thin strip showing only the home mark, so
-   the main column reclaims the space. Hover (or keyboard focus) slides
-   it open as an overlay — the content underneath never reflows. */
+   The rail collapses to a thin strip showing only the home mark, so the
+   main column reclaims the space. Hover (or keyboard focus) slides it open
+   as an overlay — the content underneath never reflows. */
 
 @media (min-width: 821px) {
   /* Reserve only the collapsed rail in the layout; the fixed sidebar
      overlays this gutter, so main fills everything to its right. A
      matching gutter on the right keeps the content symmetrically inset. */
   body {
-    padding-left: var(--sidebar-collapsed);
-    padding-right: var(--sidebar-collapsed);
+    padding-left: var(--sidebar-rail);
+    padding-right: var(--sidebar-rail);
   }
 
-  /* Let main fill the full width between the two gutters (no cap, no
-     extra side padding) so the content/photo column uses the screen. */
   main {
-    max-width: none;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  /* On photo-layout pages (bio, home), mirror the content grid on the
-     page heading so the title shifts right and lines up with the
-     centered body text below it. */
-  main:has(.content-row) .page-intro {
-    display: grid;
-    grid-template-columns: 1fr var(--photo-col);
-    gap: var(--col-gap);
-  }
-
-  main:has(.content-row) .page-intro > * {
-    grid-column: 1;
-    justify-self: center;
-    width: 100%;
-    max-width: var(--text-col);
-  }
-
-  /* Text-only pages (research, teaching, CV, resources): shift the whole
-     text column — heading and every section — into the same position as
-     the photo pages, so content aligns to one left edge site-wide. The
-     divider and footer still span full width, matching the photo pages. */
-  main:not(:has(.content-row)) {
     display: grid;
     grid-template-columns: 1fr var(--photo-col);
     column-gap: var(--col-gap);
     align-content: start;
+    align-items: start;
   }
 
-  main:not(:has(.content-row)) > * {
+  /* Prose sits in the left track, centered so the slack splits evenly to
+     either side — roughly halving the gap to the photo column. */
+  main > * {
     grid-column: 1;
     justify-self: center;
     width: 100%;
     max-width: var(--text-col);
   }
 
-  main:not(:has(.content-row)) > .divider,
-  main:not(:has(.content-row)) > footer {
-    grid-column: 1 / -1;
+  main > .side-visual {
+    grid-column: 2;
     justify-self: stretch;
     width: auto;
     max-width: none;
@@ -995,7 +839,7 @@ footer a:hover { color: var(--section-head); border-bottom-color: currentColor; 
     left: 0;
     height: 100vh;
     flex: none;
-    width: var(--sidebar-collapsed);
+    width: var(--sidebar-rail);
     overflow: hidden;
     z-index: 200;
     /* Collapsed: blend seamlessly into the main content surface. */
@@ -1018,7 +862,7 @@ footer a:hover { color: var(--section-head); border-bottom-color: currentColor; 
   /* Nav + contact stay mounted (so their width is ready) but fade out
      and go untabbable until the rail is open. The home mark is outside
      this block, so it's always visible and clickable. */
-  .sidebar .sidebar-nav {
+  .sidebar-nav {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -1040,9 +884,9 @@ footer a:hover { color: var(--section-head); border-bottom-color: currentColor; 
   body { flex-direction: column; }
 
   .sidebar {
+    --icon: 30px;
     flex: none;
     width: 100%;
-    height: auto;
     position: relative;
     flex-direction: row;
     align-items: center;
@@ -1050,14 +894,10 @@ footer a:hover { color: var(--section-head); border-bottom-color: currentColor; 
     padding: 1rem 1.25rem;
     border-right: none;
     border-bottom: 1px solid var(--rule);
-    overflow: visible;
     z-index: 100;
   }
 
-  .sidebar .nav-name { margin-bottom: 0; }
-
-  .sidebar .nav-name .icon-wrap,
-  .sidebar .nav-name .icon-wrap svg { width: 30px; height: 30px; }
+  .nav-name { margin-bottom: 0; }
 
   .hamburger { display: block; }
 
@@ -1068,7 +908,6 @@ footer a:hover { color: var(--section-head); border-bottom-color: currentColor; 
     left: 0;
     right: 0;
     flex: none;
-    width: 100%;
     background: var(--card-bg);
     border-bottom: 1px solid var(--rule);
     padding: 1.25rem 1.5rem 1.75rem;
@@ -1085,40 +924,32 @@ footer a:hover { color: var(--section-head); border-bottom-color: currentColor; 
   .contact { margin-top: 1.5rem; }
 
   /* Bars ease into an X while the menu is open. */
-  .sidebar:has(.sidebar-nav.open) .hamburger span:nth-child(1) {
+  .sidebar:has(.sidebar-nav.open) .hamburger span { background: transparent; }
+  .sidebar:has(.sidebar-nav.open) .hamburger span::before {
     transform: translateY(9px) rotate(45deg);
   }
-  .sidebar:has(.sidebar-nav.open) .hamburger span:nth-child(2) { opacity: 0; }
-  .sidebar:has(.sidebar-nav.open) .hamburger span:nth-child(3) {
+  .sidebar:has(.sidebar-nav.open) .hamburger span::after {
     transform: translateY(-9px) rotate(-45deg);
   }
 
-  main { padding: 3rem 1.5rem 2rem; max-width: 100%; }
+  main { padding: 3rem 1.5rem 2rem; }
 
-  .page-intro { margin-bottom: 2.25rem; }
+  h1 { margin-bottom: 2.75rem; }
 
-  /* .content-row is single-column here, so .text-col centers within the
-     full width of main once that width clears --text-col (39rem) — which
-     happens well before the 820px hamburger cutoff. Mirror the same
-     max-width + centering on .page-intro so h1 stays flush with the body
-     text's left edge instead of hugging main's edge on its own. */
-  main:has(.content-row) .page-intro {
-    /* main is a column flexbox, so without an explicit width, a short
-       heading like "Evan Angelone" just shrinks to fit its own text
-       instead of matching .text-col's width. */
+  /* The photo drops below the prose. Heading, prose and photo share one
+     centered column so they still line up on a single left edge; text-only
+     pages keep the full width they have here. */
+  main:has(.side-visual) > * {
     width: 100%;
     max-width: var(--text-col);
     margin-left: auto;
     margin-right: auto;
   }
 
-  .content-row { grid-template-columns: 1fr; gap: 2.25rem; }
+  .side-visual { margin-top: 2.25rem; }
 
-  .side-visual { flex-direction: row; align-items: flex-start; }
-
-  .bio-photo-figure { max-width: 200px; }
-
-  .side-visual .photo { max-width: 200px; }
+  .bio-photo-figure,
+  .photo { max-width: 200px; }
 
   .polytope-row { gap: 1.5rem 2rem; }
   .polytope-row svg { height: 128px; }
@@ -1141,16 +972,18 @@ footer a:hover { color: var(--section-head); border-bottom-color: currentColor; 
 }
 
 @media (max-width: 440px) {
-  .side-visual { flex-direction: column; }
   .bio-photo-figure,
-  .side-visual .photo { max-width: none; }
+  .photo { max-width: none; }
 }
 
 
 /* ══ Dark mode ═════════════════════════════════════════════
-   Applies automatically on devices set to dark, unless the visitor
-   has chosen light, and always when they pick dark via the nav
-   switch. theme-toggle.js manages the data-mode attribute.
+   Two selectors, one palette. The media query catches visitors whose
+   device is set to dark and who haven't overridden it; the attribute
+   catches an explicit choice from the nav switch (site.js writes data-mode
+   on <html> before first paint). CSS can't share one declaration block
+   between a media query and a plain selector, so the palette is spelled
+   twice deliberately — keep the two lists in step.
    ══════════════════════════════════════════════════════════ */
 
 @media (prefers-color-scheme: dark) {
@@ -1161,7 +994,6 @@ footer a:hover { color: var(--section-head); border-bottom-color: currentColor; 
     --section-head: #F1EEE7;
     --entry-title:  #C6C1B6;
     --text:         #9C978C;
-    --muted:        #9C978C;
     --accent:       #FFC846;   /* Reed "No. 2 Pencil" */
     --link-blue:    #7FB3E0;
     --edge-green:   #4ADE72;
@@ -1177,7 +1009,6 @@ footer a:hover { color: var(--section-head); border-bottom-color: currentColor; 
   --section-head: #F1EEE7;
   --entry-title:  #C6C1B6;
   --text:         #9C978C;
-  --muted:        #9C978C;
   --accent:       #FFC846;   /* Reed "No. 2 Pencil" */
   --link-blue:    #7FB3E0;
   --edge-green:   #4ADE72;
