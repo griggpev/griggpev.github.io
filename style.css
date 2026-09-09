@@ -405,7 +405,7 @@ section + section {
 .collapsible summary {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 1.15rem;
   cursor: pointer;
   list-style: none;
 }
@@ -414,21 +414,46 @@ section + section {
 
 .collapsible summary h2 { margin-bottom: 0; }
 
+/* The marker is drawn rather than set as a glyph, so it doesn't inherit the
+   body font's metrics and stays a crisp hairline at any size: a small square
+   showing only two of its borders, turned 45° so the bare corner reads as a
+   chevron. Its 0.45rem box plus the 1.15rem gap above keep the h2 at the same
+   1.6rem offset the old 1rem glyph gave it. The 300ms is deliberately in step
+   with DURATION in site.js, so the chevron and the panel move as one gesture. */
 .collapsible summary::before {
-  content: "▸";
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  content: "";
+  display: block;
   flex-shrink: 0;
-  width: 1rem;
-  height: 1rem;
-  font-size: 0.85rem;
-  line-height: 1;
-  color: var(--accent);
-  transition: transform 0.25s ease;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 1.5px solid var(--accent);
+  border-bottom: 1.5px solid var(--accent);
+  /* Only two borders are drawn, so the shape's mass sits toward the bottom-right
+     corner, not the middle of the box. Pivoting on that mass instead of on the
+     box centre stops the chevron drifting ~2px diagonally as it turns — it spins
+     in place. `translate` then re-centres the shape on the heading; it's a
+     constant, so the states below stay pure rotations. */
+  transform-origin: 70% 70%;
+  translate: -0.09rem -0.09rem;
+  transform: rotate(-45deg);
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s ease;
 }
 
-.collapsible[open] summary::before { transform: rotate(90deg); }
+/* Without JS the native attribute drives the marker. */
+.collapsible[open] summary::before { transform: rotate(45deg); }
+
+/* With JS it's `is-open`, toggled on click, so the chevron turns with the panel
+   in both directions. `[open]` can't do that job here: site.js holds it true for
+   the whole close animation and only drops it afterwards, which left the old
+   marker snapping back 300ms late. These two rules must stay after the one
+   above — the first only outranks `[open]` on source order. */
+.collapsible.has-js summary::before { transform: rotate(-45deg); }
+.collapsible.has-js.is-open summary::before { transform: rotate(45deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .collapsible summary::before { transition: none; }
+}
 
 /* Without JS the content sits directly under the summary. With it, site.js
    wraps the content in .collapsible-content and transitions its height, so

@@ -105,7 +105,10 @@
      wrapper whose height and opacity are transitioned in both directions.
      Without JS the sections still open and close, just instantly. */
 
+  /* Both are mirrored by the .collapsible summary::before rule in style.css,
+     so the chevron and the panel it belongs to move on the same curve. */
   const DURATION = 300;
+  const EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
   const initCollapsible = details => {
     const summary = details.querySelector('summary');
@@ -116,6 +119,11 @@
     while (summary.nextSibling) { content.append(summary.nextSibling); }
     details.append(content);
 
+    /* `open` stays true for the whole close below, so the marker follows these
+       classes instead. `has-js` lets the stylesheet drop its no-JS fallback. */
+    details.classList.add('has-js');
+    details.classList.toggle('is-open', details.open);
+
     let busy = false;
 
     summary.addEventListener('click', event => {
@@ -124,13 +132,14 @@
       busy = true;
 
       const closing = details.open;
+      details.classList.toggle('is-open', !closing);
       if (!closing) { details.open = true; }   // must be open to be measured
       const full = `${content.scrollHeight}px`;
 
       content.style.height = closing ? full : '0px';
       content.style.opacity = closing ? '1' : '0';
       content.getBoundingClientRect();         // force the start value to stick
-      content.style.transition = `height ${DURATION}ms ease, opacity ${DURATION}ms ease`;
+      content.style.transition = `height ${DURATION}ms ${EASE}, opacity ${DURATION}ms ${EASE}`;
       content.style.height = closing ? '0px' : full;
       content.style.opacity = closing ? '0' : '1';
 
