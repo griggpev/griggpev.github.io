@@ -1,16 +1,19 @@
-% homework template - Evan Angelone
+% ea-hwtp.sty - A LaTeX style file for homework assignments
+% Author: Evan Angelone
+% Description: Provides environments and commands for student homework submissions
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{ea-hwtp}[2026/01/01 Homework Template Package]
 \@twosidetrue
 
-% --- package options ---------------------------------------------------
-
+%% ============================================
+%% Package Options
+%% ============================================
 \newif\if@microtype
-\@microtypefalse  % off by default; not worth the compile time on long sets
+\@microtypefalse  % Default: microtype off
 
 \newif\if@showsolutions
-\@showsolutionstrue
+\@showsolutionstrue  % Default: show solutions
 
 \DeclareOption{microtype}{\@microtypetrue}
 \DeclareOption*{%
@@ -27,13 +30,19 @@
 }
 \ProcessOptions\relax
 
-% --- required packages --------------------------------------------------
-
+%% ============================================
+%% Required Packages
+%% ============================================
 \RequirePackage[nosumlimits]{amsmath}
 \RequirePackage{amssymb}
 \RequirePackage{amsthm}
-\RequirePackage{thmtools}
-\RequirePackage[dvipsnames]{xcolor}
+%% On LaTeX 2026-06-01+ aliascnt is a shim over the kernel's \newcounteralias
+%% and warns that it is obsolete. The shim still works; silence that one line.
+\let\ea@PackageWarning\PackageWarning
+\let\PackageWarning\@gobbletwo
+\RequirePackage{aliascnt}
+\let\PackageWarning\ea@PackageWarning
+\RequirePackage[dvipsnames, x11names, svgnames]{xcolor}
 \RequirePackage{etoolbox}
 \RequirePackage{fancyhdr}
 \RequirePackage[margin=1in]{geometry}
@@ -41,6 +50,7 @@
     \setdisplayskipstretch{1}
 \RequirePackage[most]{tcolorbox}
 
+%% Conditionally load microtype
 \if@microtype
     \RequirePackage[%
         activate=true,
@@ -49,8 +59,9 @@
     ]{microtype}
 \fi
 
-% --- colors --------------------------------------------------------------
-
+%% ============================================
+%% Color Definitions
+%% ============================================
 \definecolor{linkblue}{RGB}{20, 72, 140}
 \definecolor{urlmagenta}{RGB}{128, 0, 128}
 \definecolor{exercisecolor}{RGB}{63, 101, 118}
@@ -60,14 +71,22 @@
 \definecolor{GGText}{RGB}{47, 47, 48}
 \definecolor{Eggshell}{RGB}{240, 240, 239}
 
-\AtBeginDocument{\color{GGText}}
+%% ============================================
+%% Default Text and Bold Colors
+%% ============================================
+\AtBeginDocument{%
+	\color{GGText}% Set default text color
+}
 
-% textbf/emph normally just switch shape - here they also switch color
+% Redefine \bfseries to include color
 \let\oldtextbf\textbf
 \renewcommand{\textbf}[1]{{\bfseries\color{GGBold}#1}}
+
+% Redefine \emph to include color
 \let\oldemph\emph
 \renewcommand{\emph}[1]{{\itshape\color{GGBold}#1}}
 
+% For section headers
 \RequirePackage{titlesec}
 \titleformat{\section}
 	{\normalfont\Large\bfseries\color{GGHeader}}{\thesection}{1em}{}
@@ -76,35 +95,44 @@
 \titleformat{\subsubsection}
 	{\normalfont\normalsize\bfseries\color{GGHeader}}{\thesubsubsection}{1em}{}
 
-% --- title metadata --------------------------------------------------------
-
+%% ============================================
+%% Internal Storage Commands
+%% ============================================
 \newcommand{\@hwname}{}
 \newcommand{\@hwdate}{\today}
 \newcommand{\@hwcourse}{}
 \newcommand{\@hwtitle}{Homework}
-\renewcommand{\and}{\unskip, }
+\renewcommand{\and}{%
+	\unskip, % comma separator
+}
 
+%% User-facing commands to set metadata
 \newcommand{\name}[1]{\renewcommand{\@hwname}{#1}}
 \renewcommand{\date}[1]{\renewcommand{\@hwdate}{#1}}
 \newcommand{\course}[1]{\renewcommand{\@hwcourse}{#1}}
 \newcommand{\homework}[1]{\renewcommand{\@hwtitle}{#1}}
 
-% hyperref wants to be loaded last, after everyone else has had
-% a chance to fight over colors and \maketitle
+%% ============================================
+%% Hyperref Configuration (loaded last for compatibility)
+%% ============================================
 \AtEndPreamble{%
 	\RequirePackage{hyperref}
 	\hypersetup{
 		colorlinks=true,
-		linkcolor=linkblue,
-		citecolor=SpringGreen,
+		linkcolor=red,
+		citecolor=green,
 		urlcolor=magenta,
-		filecolor=magenta,
+		filecolor=cyan,
 		pdftitle={\@hwtitle},
 		pdfauthor={\@hwname},
 		pdfsubject={\@hwcourse},
 		pdfcreator={LaTeX with ea-hwtp.sty},
 	}
 }
+
+%% ============================================
+%% Title Config
+%% ============================================
 
 \renewcommand{\@maketitle}{%
 	\noindent
@@ -121,51 +149,74 @@
 \let\oldmaketitle\maketitle
 \renewcommand{\maketitle}{\oldmaketitle\thispagestyle{empty}}
 
-\AtBeginDocument{\maketitle}
-
-% --- theorem-like environments ---------------------------------------------
-
+%% ============================================
+%% Theorem-like Environments (Numbered)
+%% ============================================
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{conjecture}[theorem]{Conjecture}
-\newtheorem{claim}[theorem]{Claim}
+
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+
+\newaliascnt{conjecture}{theorem}
+\newtheorem{conjecture}[conjecture]{Conjecture}
+\aliascntresetthe{conjecture}
+
+\newaliascnt{claim}{theorem}
+\newtheorem{claim}[claim]{Claim}
+\aliascntresetthe{claim}
 
 \theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{example}[theorem]{Example}
-\newtheorem{notation}[theorem]{Notation}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
+
+\newaliascnt{notation}{theorem}
+\newtheorem{notation}[notation]{Notation}
+\aliascntresetthe{notation}
 
 \theoremstyle{remark}
-\newtheorem{remark}[theorem]{Remark}
-\newtheorem{note}[theorem]{Note}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
 
-% starred versions, unnumbered, for when I don't want them tied to a section
-\theoremstyle{plain}
-\newtheorem*{theorem*}{Theorem}
-\newtheorem*{lemma*}{Lemma}
-\newtheorem*{corollary*}{Corollary}
-\newtheorem*{proposition*}{Proposition}
-\newtheorem*{conjecture*}{Conjecture}
-\newtheorem*{claim*}{Claim}
+\newaliascnt{note}{theorem}
+\newtheorem{note}[note]{Note}
+\aliascntresetthe{note}
 
-\theoremstyle{definition}
-\newtheorem*{definition*}{Definition}
-\newtheorem*{example*}{Example}
-\newtheorem*{notation*}{Notation}
+%% \autoref names: hyperref supplies only \theoremautorefname
+\providecommand*{\lemmaautorefname}{Lemma}
+\providecommand*{\corollaryautorefname}{Corollary}
+\providecommand*{\propositionautorefname}{Proposition}
+\providecommand*{\conjectureautorefname}{Conjecture}
+\providecommand*{\claimautorefname}{Claim}
+\providecommand*{\definitionautorefname}{Definition}
+\providecommand*{\exampleautorefname}{Example}
+\providecommand*{\notationautorefname}{Notation}
+\providecommand*{\remarkautorefname}{Remark}
+\providecommand*{\noteautorefname}{Note}
+\providecommand*{\exerciseautorefname}{Exercise}
 
-\theoremstyle{remark}
-\newtheorem*{remark*}{Remark}
-\newtheorem*{note*}{Note}
-
-% --- exercise environment ---------------------------------------------------
-
+%% ============================================
+%% Exercise Environment
+%% ============================================
 \newcounter{exercise}[section]
 \renewcommand{\theexercise}{\thesection.\arabic{exercise}}
 
-% if the document never starts a section, fall back to flat numbering
+% Reset counter format if no sections are used
 \AtBeginDocument{%
 	\@ifundefined{c@section}{}{%
 		\ifnum\value{section}=0
@@ -197,9 +248,11 @@
 	\quad
 }{\par}
 
+
 \RequirePackage{enumitem}
 \setlist[enumerate]{
     label=(\alph*),
+    ref=(\alph*),
 	labelsep=10pt,
 	itemsep=0pt,
 	parsep=2pt,
@@ -213,8 +266,9 @@
 	topsep=2pt
 }
 
-% --- solution box ------------------------------------------------------
-
+%% ============================================
+%% Solution Environment (breakable colored box)
+%% ============================================
 \newtcolorbox{solution}{
 	breakable,
 	enhanced,
@@ -234,13 +288,13 @@
 	attach title to upper={\qquad}
 }
 
-% showsolutions=false swallows the box's content instead of skipping it,
-% so page breaks etc. inside a hidden solution don't get counted
 \if@showsolutions\else
 	\renewenvironment{solution}{\setbox\z@\vbox\bgroup}{\egroup}
 \fi
 
-% overriding amsthm's \proof to match the exercise/solution spacing
+%% ============================================
+%% Proof Environment (redefine for consistency)
+%% ============================================
 \renewenvironment{proof}[1][Proof]{%
 	\par\pushQED{\qed}%
 	\normalfont \topsep6\p@\@plus6\p@\relax
@@ -259,19 +313,22 @@
 	\endtrivlist\@endpefalse
 }
 
-% --- header/footer ---------------------------------------------------------
+%% ============================================
+%% Header/Footer Configuration
+%% ============================================
+	\pagestyle{fancy}
+	\fancyhf{}
+	\fancyhead[C]{\footnotesize\sffamily\color{GGHeader}\rightmark}
+	\fancyhead[L]{\footnotesize\sffamily\color{GGHeader}\MakeUppercase{\@hwtitle}}
+	\fancyhead[R]{\footnotesize\sffamily\color{GGHeader}\@hwname}
+	\fancyfoot[RO,LE]{\footnotesize\sffamily\color{GGHeader}\thepage}
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
 
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[C]{\footnotesize\sffamily\color{GGHeader}\rightmark}
-\fancyhead[L]{\footnotesize\sffamily\color{GGHeader}\MakeUppercase{\@hwtitle}}
-\fancyhead[R]{\footnotesize\sffamily\color{GGHeader}\@hwname}
-\fancyfoot[RO,LE]{\footnotesize\sffamily\color{GGHeader}\thepage}
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
-
-% --- shorthand ---------------------------------------------------------
-
+%% ============================================
+%% Convenience Commands
+%% ============================================
+% Common math operators
 \DeclareMathOperator{\Ima}{Im}
 \DeclareMathOperator{\Ker}{Ker}
 \DeclareMathOperator{\rank}{rank}
@@ -279,6 +336,7 @@
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\sgn}{sgn}
 
+% Shorthand for common sets
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -286,10 +344,10 @@
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\F}{\mathbb{F}}
 
+% Paired delimiters (requires mathtools if you want auto-sizing)
 \newcommand{\abs}[1]{\left|#1\right|}
 \newcommand{\norm}[1]{\left\|#1\right\|}
 \newcommand{\inner}[1]{\left\langle #1 \right\rangle}
-\newcommand{\set}[1]{\left\{#1\right\}}
 \newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
 \newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
 

@@ -262,6 +262,22 @@
 	nobreak=false%
 }
 
+\mdfdefinestyle{unthmstyle}{%
+	topline=true,%
+	bottomline=true,%
+	leftline=true,%
+	rightline=true,%
+	linewidth=1pt,%
+	linecolor=gray-9,%
+	innertopmargin=8pt,%
+	innerbottommargin=8pt,%
+	innerleftmargin=8pt,%
+	innerrightmargin=8pt,%
+	skipabove=\smallskipamount,%
+	skipbelow=\ea@skip,%
+	nobreak=false%
+}
+
 % Just a rule down the left, for definition/question.
 \mdfdefinestyle{defstyle}{%
 	topline=false,%
@@ -286,7 +302,7 @@
 \newcounter{corollary}
 \newcounter{conjecture}
 
-% Heading for the boxed environments: "<Name> <n>" with an optional title.
+% Heading for the boxed environments: "&lt;Name&gt; &lt;n&gt;" with an optional title.
 % \needspace keeps the heading from being orphaned above its box at a
 % page break.
 \newcommand{\ea@thmheader}[3]{%
@@ -300,9 +316,27 @@
 	\par\nobreak\smallskip
 }
 
+% Unnumbered variant of \ea@thmheader: same look, but no counter is
+% printed (and none is stepped), for the "*" environments below.
+\newcommand{\ea@thmheaderstar}[2]{%
+	\def\ea@thmtitle{#2}%
+	\needspace{6\baselineskip}%
+	\par\vspace{\ea@skip}\noindent
+	{\large\sffamily\bfseries\color{gray-9}#1}%
+	\ifx\ea@thmtitle\@empty\else
+		\hspace{2em}{\large\normalfont\sffamily\color{gray-9}#2}%
+	\fi
+	\par\nobreak\smallskip
+}
+
 \newenvironment{theorem}[1][]{%
 	\refstepcounter{theorem}\ea@thmheader{Theorem}{#1}{theorem}%
 	\begin{mdframed}[style=thmstyle]\itshape
+}{\end{mdframed}}
+
+\newenvironment{theorem*}[1][]{%
+	\ea@thmheaderstar{Theorem}{#1}%
+	\begin{mdframed}[style=unthmstyle]\itshape
 }{\end{mdframed}}
 
 \newenvironment{lemma}[1][]{%
@@ -388,9 +422,18 @@
 \renewcommand{\headrulewidth}{1pt}
 \setlength{\headheight}{14pt}
 
+% \subtitle{...} sets a second line under the title, printed in a lighter
+% grey below \@title.  Empty by default, so \maketitle skips it entirely.
+\newcommand{\@subtitle}{}
+\newcommand{\subtitle}[1]{\renewcommand{\@subtitle}{#1}}
+
 \renewcommand{\maketitle}{%
 	\thispagestyle{empty}%
 	\noindent{\Huge\sffamily\color{black}\@title}\par
+	\ifx\@subtitle\@empty\else
+		\vspace{1\baselineskip}%
+		\noindent{\Large\sffamily\color{gray-7}\@subtitle}\par
+	\fi
 	\vspace{2\baselineskip}%
 }
 
