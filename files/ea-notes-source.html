@@ -1,15 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>ea-notes.sty — Source</title>
-		<link rel="stylesheet" href="../style.css">
-		<script src="../site.js"></script>
-	</head>
-	<body class="code-view">
-		<header class="code-view-header">ea-notes.sty</header>
-		<pre class="code-view-pre"><code>% ea-notes.sty -- a personal style for typeset lecture notes.
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ea-notes.sty source | Evan Angelone</title>
+	<link rel="icon" href="../icons/owl-outline.svg" type="image/svg+xml">
+	<style>
+		@font-face {
+			font-family: "National 2";
+			src: url("../fonts/national-2-regular.woff2") format("woff2");
+			font-weight: 400;
+		}
+		body {
+			margin: 0;
+			background: #f8f9fa;
+			color: #212529;
+		}
+		header {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem 1.5rem;
+			align-items: baseline;
+			padding: 1.25rem 2rem;
+			border-bottom: 1px solid #dee2e6;
+			font: 400 0.9375rem/1.4 "National 2", "Helvetica Neue", Arial, sans-serif;
+		}
+		header strong { font-weight: 400; margin-right: auto; }
+		a { color: inherit; text-underline-offset: 0.18em; text-decoration-color: #868e96; }
+		pre {
+			margin: 0;
+			padding: 1.5rem 2rem 3rem;
+			overflow-x: auto;
+			font: 0.8125rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+		}
+		@media (prefers-color-scheme: dark) {
+			body { background: #212529; color: #f1f3f5; }
+			header { border-color: #343a40; }
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<strong>ea-notes.sty</strong>
+		<a href="ea-notes.sty" download>Download</a>
+		<a href="../index.html#latex">Back to the site</a>
+	</header>
+	<pre><code>% ea-notes.sty -- a personal style for typeset lecture notes.
 %
 % Evan Angelone, 2026.  Sans-serif headings, framed theorem-like
 % environments, and a two-line running header.  Colours are the Mantine
@@ -479,5 +515,5 @@
 
 \newcommand{\definemathbb}[1]{\csdef{#1}{\mathbb{#1}}}
 \forcsvlist{\definemathbb}{N,Z,Q,R,C,F,E}</code></pre>
-	</body>
+</body>
 </html>

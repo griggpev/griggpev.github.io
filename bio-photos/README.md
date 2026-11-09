@@ -1,6 +1,9 @@
-Drop photo files here named sequentially: `1.jpg`, `2.jpg`, `3.jpg`, ... (jpg, jpeg,
-png, and webp are all supported). bio.html automatically probes the folder for numbered
-files at each page load and picks one at random — no code changes needed to add a photo.
+Photos for the About section. The page shows one at random on each visit.
 
-Just keep the numbering contiguous starting from 1. If you go past 30 photos, bump
-`maxBioPhotos` in the script at the bottom of bio.html.
+To add one, save it here as the next number (`33.jpeg`, say) and add a line to
+the `BIO_PHOTOS` list in `js/bio-photo.js`:
+
+    { n: 33, caption: 'Where it was taken.' },
+
+Use `ext: 'png'` for anything that isn't a .jpeg. Leave out `caption` if the
+photo doesn't need one.

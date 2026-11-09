@@ -200,7 +200,7 @@
     container.replaceChildren(...frames.map((n, i) => {
       const img = document.createElement('img');
       img.className = 'bio-photo';
-      img.src = `bio-photos/${n}.${ext}`;
+      img.src = `../../bio-photos/${n}.${ext}`;
       // One alt for the whole sequence; the later frames repeat the subject,
       // so they stay out of the accessibility tree.
       img.alt = i === 0 ? (pick.alt || 'Evan Angelone') : '';

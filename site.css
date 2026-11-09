@@ -1,0 +1,597 @@
+/* Evan Angelone, personal site.
+
+   One page laid out like a paper: title, abstract, numbered sections.
+   National 2 throughout (Light for text, Regular for titles and labels,
+   Medium for section heads). Colors are the Open Color grays,
+   yeun.github.io/open-color. */
+
+
+/* Fonts: Latin subsets made with pyftsubset */
+
+@font-face {
+  font-family: "National 2";
+  src: url("fonts/national-2-light.woff2") format("woff2");
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "National 2";
+  src: url("fonts/national-2-regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "National 2";
+  src: url("fonts/national-2-medium.woff2") format("woff2");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+
+
+/* Tokens */
+
+:root {
+  --gray-0: #f8f9fa;
+  --gray-1: #f1f3f5;
+  --gray-2: #e9ecef;
+  --gray-3: #dee2e6;
+  --gray-4: #ced4da;
+  --gray-5: #adb5bd;
+  --gray-6: #868e96;
+  --gray-7: #495057;
+  --gray-8: #343a40;
+  --gray-9: #212529;
+
+  color-scheme: light;
+  --paper:  var(--gray-0);
+  --ink:    var(--gray-9);
+  --muted:  var(--gray-7);
+  --line:   var(--gray-6);   /* link underlines */
+  --hair:   var(--gray-3);   /* light separators */
+  --select: var(--gray-3);
+
+  --sans:   "National 2", "Helvetica Neue", Arial, sans-serif;
+
+  /* Light is thin, so the body runs large. */
+  --text:          1rem;       /* phones */
+  --text-wide:     1.1875rem;  /* 48rem and up */
+  --leading:       1.6;        /* running text */
+  --leading-list:  1.55;       /* reference and entry lists */
+  --leading-tight: 1.25;       /* headings */
+  --leading-ui:    1.4;        /* contents, captions */
+
+  /* About 73 characters a line. Narrower measures left gaps in the
+     justified text. */
+  --measure: 40rem;
+
+  /* Tighter word spaces give justification room to stretch. */
+  --word-space:   -0.03em;
+  --hyphen-limit: 6 3 2;
+
+  /* Spacing scale */
+  --space-2xs: 0.25rem;
+  --space-xs:  0.4rem;
+  --space-s:   0.7rem;
+  --space-m:   1rem;
+  --space-l:   1.75rem;
+  --space-xl:  3rem;
+
+  --col:  var(--measure);   /* text block */
+  --toc:  11rem;            /* margin contents */
+  --gap:  3.5rem;
+}
+
+/* Dark mode, from the device setting or the switch (js/theme.js).
+   Keep these two blocks in sync. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper:  var(--gray-9);
+    --ink:    var(--gray-1);
+    --muted:  var(--gray-5);
+    --line:   var(--gray-6);
+    --hair:   var(--gray-8);
+    --select: var(--gray-7);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper:  var(--gray-9);
+  --ink:    var(--gray-1);
+  --muted:  var(--gray-5);
+  --line:   var(--gray-6);
+  --hair:   var(--gray-8);
+  --select: var(--gray-7);
+}
+
+
+/* Base */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: var(--text);
+  line-height: var(--leading);
+  font-kerning: normal;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-synthesis: none;
+  hyphens: manual;
+  -webkit-hyphens: manual;
+}
+
+@media (min-width: 48rem) {
+  body { font-size: var(--text-wide); }
+}
+
+/* "pretty" left short first lines in the list entries, so paragraphs only. */
+h1, h2, h3 { text-wrap: balance; }
+p, figcaption { text-wrap: pretty; }
+
+/* Justified text. Browsers won't hyphenate capitalized words, so long ones
+   (Northeastern, University, ...) have &shy; in the HTML, and arXiv IDs a
+   <wbr> after the colon. Names are left alone. */
+.abstract p,
+.about > p,
+.runin,
+.refs > li,
+.entries > li,
+.courses .terms,
+.hobbies li {
+  text-align: justify;
+  text-justify: inter-word;
+  text-align-last: start;
+  word-spacing: var(--word-space);
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: var(--hyphen-limit);
+}
+
+@media (max-width: 30rem) {
+  :root { --word-space: -0.05em; --hyphen-limit: 5 2 2; }
+}
+
+/* For short hyphenated words like co-mentored. National 2 has no
+   non-breaking hyphen. Allowed to break on phones. */
+.nobr { white-space: nowrap; }
+@media (max-width: 30rem) {
+  .nobr { white-space: normal; }
+}
+
+h1, h2, h3, p, ol, ul, figure { margin: 0; }
+
+::selection { background: var(--select); color: var(--ink); }
+
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: var(--line);
+}
+a:hover { text-decoration-color: currentColor; }
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+
+sup { line-height: 0; font-size: 0.7em; }
+
+cite { font-style: normal; font-weight: 400; }
+
+/* No italic font is loaded; let the q in AGL(1, q) slant anyway. */
+i { font-synthesis: style; }
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  padding: 0.4rem 0.7rem;
+  background: var(--paper);
+  font-size: 0.875rem;
+  z-index: 10;
+}
+.skip:focus { top: 0.75rem; }
+
+/* LaTeX logo */
+.latex { white-space: nowrap; }
+.latex .a {
+  font-size: 0.72em;
+  text-transform: uppercase;
+  vertical-align: 0.25em;
+  margin: 0 -0.15em 0 -0.36em;
+}
+.latex .e {
+  text-transform: uppercase;
+  vertical-align: -0.5ex;
+  margin: 0 -0.125em 0 -0.1667em;
+}
+
+/* Small caps labels */
+.label,
+.toc-label,
+.abstract-h {
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-feature-settings: "case";
+}
+
+
+/* Layout */
+
+.layout {
+  max-width: calc(var(--col) + 2rem);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.toc { display: none; }
+
+/* Contents in the left margin from 52rem. The empty right column that
+   centers the text only comes in at 76rem. */
+@media (min-width: 52rem) {
+  .layout {
+    max-width: calc(var(--toc) + var(--gap) + var(--col) + 4rem);
+    display: grid;
+    grid-template-columns: var(--toc) minmax(0, var(--col));
+    column-gap: var(--gap);
+    justify-content: center;
+    padding: 0 2rem;
+  }
+
+  .toc {
+    display: block;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    padding-top: 5rem;
+  }
+
+  .toc-inline { display: none; }
+}
+
+/* Narrower margin column here so the text keeps its width. */
+@media (min-width: 52rem) and (max-width: 63.99rem) {
+  :root { --toc: 9.5rem; --gap: 2.25rem; }
+}
+
+@media (min-width: 76rem) {
+  .layout {
+    max-width: calc(var(--toc) + var(--gap) + var(--col) + var(--gap) + var(--toc) + 4rem);
+    grid-template-columns: var(--toc) minmax(0, var(--col)) var(--toc);
+  }
+}
+
+.article {
+  padding: 3rem 0 4rem;
+  min-width: 0;
+}
+
+@media (min-width: 48rem) {
+  .article { padding: 4.5rem 0 6rem; }
+}
+
+
+/* Contents and dark mode switch */
+
+.toc { font-size: 0.9375rem; line-height: var(--leading-ui); }
+
+.toc-label { margin-bottom: var(--space-s); }
+
+.toc ol { list-style: none; padding: 0; }
+.toc li + li { margin-top: var(--space-xs); }
+
+.toc a,
+.toc-inline a {
+  text-decoration: none;
+}
+.toc a { display: inline-flex; gap: 0.7em; }
+.toc a:hover,
+.toc-inline a:hover { text-decoration: underline; text-decoration-color: var(--line); }
+.toc .n { min-width: 0.8em; font-variant-numeric: tabular-nums lining-nums; }
+
+.toc-extra {
+  margin-top: var(--space-l);
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--hair);
+}
+.toc-extra p + p { margin-top: var(--space-xs); }
+
+/* js/theme.js puts the switch here. */
+.theme-slot:empty { display: none; }
+
+.theme-toggle {
+  font: inherit;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: var(--line);
+  text-decoration-style: dotted;
+}
+.theme-toggle:hover { text-decoration-style: solid; text-decoration-color: currentColor; }
+
+
+/* Title block and abstract */
+
+.title-block {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 48rem) {
+  h1 { font-size: 2.5rem; }
+}
+
+.corresp {
+  margin-top: var(--space-s);
+  font-size: 0.875em;
+  hyphens: manual;
+}
+
+.sep { margin: 0 0.45em; }
+
+@media (max-width: 30rem) {
+  .corresp .sep { display: none; }
+  .corresp a { display: block; width: fit-content; margin: var(--space-2xs) auto 0; }
+}
+
+.abstract { margin: 0 auto; }
+
+.abstract-h {
+  text-align: center;
+  margin-bottom: var(--space-s);
+}
+
+
+/* Sections */
+
+section { margin-top: var(--space-xl); }
+.abstract + .toc-inline { margin-top: var(--space-l); }
+.toc-inline + section { margin-top: var(--space-l); }
+
+h2 {
+  font-weight: 500;
+  font-size: 1.25rem;
+  letter-spacing: -0.005em;
+  line-height: var(--leading-tight);
+  margin-bottom: var(--space-m);
+  scroll-margin-top: 1.5rem;
+  font-variant-numeric: lining-nums;
+}
+
+h2 .n, .subsec .n {
+  display: inline-block;
+  min-width: 2em;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Indent paragraphs after the first, no gap. */
+.article p + p { text-indent: 1.5em; }
+
+.toc-inline {
+  border-top: 1px solid var(--hair);
+  border-bottom: 1px solid var(--hair);
+  padding: var(--space-m) 0;
+  font-size: 0.9375rem;
+  line-height: var(--leading-ui);
+}
+
+.toc-inline ol {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--space-xs) 1.5rem;
+}
+
+
+.toc-inline .theme-slot {
+  margin-top: var(--space-s);
+  padding-top: var(--space-s);
+  border-top: 1px solid var(--hair);
+}
+
+
+/* References and talks */
+
+.refs {
+  list-style: none;
+  padding: 0;
+  counter-reset: ref;
+  font-size: 0.95em;
+  line-height: var(--leading-list);
+}
+
+.refs > li {
+  counter-increment: ref;
+  position: relative;
+  padding-left: 2.6em;
+}
+
+.refs > li + li { margin-top: var(--space-s); }
+
+.refs > li::before {
+  content: "[" counter(ref) "]";
+  position: absolute;
+  left: 0;
+  width: 2.1em;
+  text-align: right;
+  text-align-last: right;   /* otherwise inherits start from the li */
+  color: var(--ink);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.refs.talks > li::before { content: "[T" counter(ref) "]"; }
+.refs.talks > li { padding-left: 2.9em; }
+.refs.talks > li::before { width: 2.4em; }
+
+
+/* Subsections, courses, mentorship */
+
+.subsec {
+  font-weight: 400;
+  font-size: 1.05rem;
+  line-height: var(--leading-tight);
+  margin: var(--space-l) 0 var(--space-s);
+  font-variant-numeric: lining-nums;
+}
+h2 + .subsec { margin-top: 0; }
+
+.lead { margin-bottom: var(--space-s); }
+
+/* Course code hangs to the left; title, then the terms. */
+.courses,
+.entries {
+  list-style: none;
+  padding: 0;
+  font-size: 0.95em;
+  line-height: var(--leading-list);
+}
+
+.courses > li + li,
+.entries > li + li { margin-top: var(--space-s); }
+
+.courses > li {
+  position: relative;
+  padding-left: 6em;
+}
+
+.courses .code {
+  position: absolute;
+  left: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.courses cite,
+.courses .terms { display: block; }
+
+@media (max-width: 30rem) {
+  .courses > li { padding-left: 0; }
+  .courses .code { position: static; display: block; }
+}
+
+
+/* Figures */
+
+.fig { margin: var(--space-l) 0 0; }
+
+.fig figcaption {
+  margin-top: var(--space-s);
+  font-size: 0.875em;
+  line-height: var(--leading-ui);
+  text-align: center;
+  color: var(--muted);
+}
+
+.fig-label {
+  font-weight: 400;
+  font-size: 0.8em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-feature-settings: "case";
+  color: var(--ink);
+  margin-right: 0.35em;
+}
+
+
+/* Style files */
+
+.article .runin + .runin { text-indent: 0; margin-top: var(--space-m); }
+
+.runin-h {
+  font-weight: 400;
+  margin-right: 0.3em;
+}
+
+.file-links {
+  display: block;
+  margin-top: var(--space-2xs);
+  font-size: 0.85em;
+}
+
+
+/* About */
+
+/* Portrait floats left beside the first paragraph. */
+.author-photo {
+  float: left;
+  width: 8.5rem;
+  margin: 0.35rem 1.1rem 0.4rem 0;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.about h2 + .author-photo + p { text-indent: 0; }
+
+/* Too narrow to wrap text around it on phones. */
+@media (max-width: 30rem) {
+  .author-photo { float: none; margin: 0 0 var(--space-m); }
+}
+
+.hobbies {
+  clear: both;
+  margin-top: var(--space-s);
+  padding-left: 1.5em;
+}
+
+.hobbies li + li { margin-top: var(--space-2xs); }
+
+.bio-photo { clear: both; }
+
+.bio-photo .frames {
+  display: flex;
+  justify-content: center;
+}
+
+.bio-photo .frames img { max-height: 22rem; width: auto; }
+
+.bio-photo .frames.is-sequence { gap: 0.5rem; }
+.bio-photo .frames.is-sequence img { max-height: 15rem; min-width: 0; flex: 0 1 auto; }
+
+@media (max-width: 30rem) {
+  .bio-photo .frames.is-sequence { flex-direction: column; align-items: center; }
+}
+
+
+/* Colophon */
+
+.colophon {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--hair);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+
+/* Print */
+
+@media print {
+  .toc, .toc-inline, .skip, .colophon { display: none; }
+  .layout { display: block; max-width: none; }
+  :root { --paper: var(--gray-0); --ink: var(--gray-9); --muted: var(--gray-7); }
+  a { text-decoration: none; }
+}

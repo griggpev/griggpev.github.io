@@ -179,13 +179,13 @@ a:hover {
 }
 
 .nav-name::before {
-  -webkit-mask-image: url('icons/owl-outline.svg');
-          mask-image: url('icons/owl-outline.svg');
+  -webkit-mask-image: url('../../icons/owl-outline.svg');
+          mask-image: url('../../icons/owl-outline.svg');
 }
 
 .nav-name::after {
-  -webkit-mask-image: url('icons/owl-solid.svg');
-          mask-image: url('icons/owl-solid.svg');
+  -webkit-mask-image: url('../../icons/owl-solid.svg');
+          mask-image: url('../../icons/owl-solid.svg');
   opacity: 0;
 }
 
