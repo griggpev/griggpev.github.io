@@ -46,6 +46,8 @@
   --line:   var(--gray-6);   /* link underlines */
   --hair:   var(--gray-3);   /* light separators */
   --select: var(--gray-3);
+  --accent: #f76707;         /* OC orange 7: hovered links, what is moving */
+  --link:   color-mix(in oklab, var(--accent) 40%, var(--ink));   /* warm ink */
 
   --sans:   "National 2", "Helvetica Neue", Arial, sans-serif;
 
@@ -89,6 +91,8 @@
     --line:   var(--gray-6);
     --hair:   var(--gray-8);
     --select: var(--gray-7);
+    --accent: rgb(247, 197, 159);
+    --link:   color-mix(in oklab, var(--accent) 85%, var(--ink));
   }
 }
 
@@ -100,6 +104,32 @@
   --line:   var(--gray-6);
   --hair:   var(--gray-8);
   --select: var(--gray-7);
+  --accent: rgb(247, 197, 159);
+  --link:   color-mix(in oklab, var(--accent) 85%, var(--ink));
+}
+
+/* Flipping the switch fades between modes instead of snapping. js/theme.js
+   sets the class for the length of the fade only, so nothing else on the
+   page picks up these transitions. */
+:root.theme-fade,
+:root.theme-fade *,
+:root.theme-fade *::before,
+:root.theme-fade *::after {
+  transition:
+    background-color 0.45s ease,
+    color 0.45s ease,
+    border-color 0.45s ease,
+    text-decoration-color 0.45s ease,
+    outline-color 0.45s ease,
+    fill 0.45s ease,
+    stroke 0.45s ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root.theme-fade,
+  :root.theme-fade *,
+  :root.theme-fade *::before,
+  :root.theme-fade *::after { transition: none !important; }
 }
 
 
@@ -166,14 +196,34 @@ h1, h2, h3, p, ol, ul, figure { margin: 0; }
 
 ::selection { background: var(--select); color: var(--ink); }
 
-a {
-  color: var(--ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
-  text-decoration-color: var(--line);
+/* Links have no underline at rest, only a warmer ink (--link, a little of
+   the accent). On hover or keyboard focus an accent underline grows out from
+   the middle, after uiverse.io/WhiteNervosa/popular-ladybug-27. It is a
+   background, so it follows a link that wraps. --bar-y puts its top 0.18em
+   below the baseline: National 2's ascent is 0.98em, so 1.16em down from the
+   top of a line of text, and in a one-line box (a button) half the line
+   height plus 0.54em down. The padding gives it room under the descenders. */
+a,
+.theme-toggle {
+  color: var(--link);
+  text-decoration: none;
+  background: linear-gradient(var(--accent), var(--accent)) no-repeat;
+  background-position: 50% var(--bar-y);
+  background-size: 0% 2px;
+  transition: background-size 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-a:hover { text-decoration-color: currentColor; }
+a {
+  --bar-y: 1.16em;
+  padding-bottom: 0.1em;
+}
+a:hover,
+a:focus-visible,
+.theme-toggle:hover,
+.theme-toggle:focus-visible { background-size: 100% 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  a, .theme-toggle { transition: none; }
+}
 
 a:focus-visible,
 button:focus-visible {
@@ -272,6 +322,11 @@ i { font-synthesis: style; }
   }
 }
 
+.layout.is-single {
+  display: block;
+  max-width: calc(var(--col) + 4rem);
+}
+
 .article {
   padding: 3rem 0 4rem;
   min-width: 0;
@@ -295,10 +350,26 @@ i { font-synthesis: style; }
 .toc-inline a {
   text-decoration: none;
 }
-.toc a { display: inline-flex; gap: 0.7em; }
-.toc a:hover,
-.toc-inline a:hover { text-decoration: underline; text-decoration-color: var(--line); }
-.toc .n { min-width: 0.8em; font-variant-numeric: tabular-nums lining-nums; }
+.toc .n {
+  display: inline-block;
+  min-width: 0.8em;
+  margin-right: 0.7em;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* In the margin the number stays plain; the bar runs under the name. */
+.toc ol a { background: none; }
+.toc ol a > span:not(.n) {
+  background: linear-gradient(var(--accent), var(--accent)) no-repeat;
+  background-position: 50% 1.16em;
+  background-size: 0% 2px;
+  padding-bottom: 0.1em;
+  transition: background-size 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.toc ol a:hover > span:not(.n),
+.toc ol a:focus-visible > span:not(.n) { background-size: 100% 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .toc ol a > span:not(.n) { transition: none; }
+}
 
 .toc-extra {
   margin-top: var(--space-l);
@@ -311,19 +382,14 @@ i { font-synthesis: style; }
 .theme-slot:empty { display: none; }
 
 .theme-toggle {
+  --bar-y: calc(0.5lh + 0.54em);
   font: inherit;
-  color: var(--ink);
-  background: none;
+  color: var(--link);
+  background-color: transparent;
   border: 0;
   padding: 0;
   cursor: pointer;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
-  text-decoration-color: var(--line);
-  text-decoration-style: dotted;
 }
-.theme-toggle:hover { text-decoration-style: solid; text-decoration-color: currentColor; }
 
 
 /* Title block and abstract */
@@ -351,10 +417,12 @@ h1 {
 }
 
 .sep { margin: 0 0.45em; }
+/* No dot before the dark mode switch when there is no switch (no script). */
+.corresp .sep:has(+ .theme-slot:empty) { display: none; }
 
 @media (max-width: 30rem) {
   .corresp .sep { display: none; }
-  .corresp a { display: block; width: fit-content; margin: var(--space-2xs) auto 0; }
+  .corresp a { display: block; width: fit-content; margin: var(--space-2xs) auto 0; padding-bottom: 0; --bar-y: calc(0.5lh + 0.54em); }
 }
 
 .abstract { margin: 0 auto; }
@@ -533,6 +601,12 @@ h2 + .subsec { margin-top: 0; }
 }
 
 
+/* Fun stuff */
+
+.fun { list-style: none; padding: 0; }
+.fun > li + li { margin-top: var(--space-xs); }
+
+
 /* About */
 
 /* Portrait floats left beside the first paragraph. */
@@ -593,5 +667,5 @@ h2 + .subsec { margin-top: 0; }
   .toc, .toc-inline, .skip, .colophon { display: none; }
   .layout { display: block; max-width: none; }
   :root { --paper: var(--gray-0); --ink: var(--gray-9); --muted: var(--gray-7); }
-  a { text-decoration: none; }
+  a { text-decoration: none; background: none; }
 }

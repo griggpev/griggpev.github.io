@@ -19,6 +19,14 @@
 
   const current = () => root.dataset.theme || (device.matches ? 'dark' : 'light');
 
+  // While this class is on, site.css cross-fades every color.
+  let fadeTimer = 0;
+  const fade = () => {
+    root.classList.add('theme-fade');
+    clearTimeout(fadeTimer);
+    fadeTimer = setTimeout(() => root.classList.remove('theme-fade'), 500);
+  };
+
   apply(stored());
 
   const init = () => {
@@ -43,6 +51,7 @@
     buttons.forEach(button => button.addEventListener('click', () => {
       const next = current() === 'dark' ? 'light' : 'dark';
       try { localStorage.setItem(KEY, next); } catch { /* private browsing: just this page */ }
+      fade();
       apply(next);
       render();
     }));
