@@ -1,19 +1,45 @@
-/* There are 18 finite regular polyhedra. Builds on ../site.css, whose
-   accent, orange, marks whatever is moving.
-
-   Page: the title across the top, on one line. On wide screens the whole
-   page fits one screen: the map in the left margin with the key legend
-   under it, the polyhedron in the middle, the group in the right margin.
-   The polyhedron shrinks to leave room on short screens. */
+/* The regular polyhedra, family by family. Builds on ../site.css, whose accent, orange, marks whatever is moving.
+   Page: the title across the top, on one line. On wide screens the whole page fits one screen: the polyhedron in the middle, the map in the right margin, and the keys in a row along the bottom. The polyhedron shrinks to leave room on short screens. */
 
 :root {
-  --tt-margin: 13rem;
-  --tt-left: 15rem;      /* the map */
+  --tt-margin: 15rem; /* the map */
+  --tt-left: 15rem; /* as wide, so the polyhedron sits in the middle */
   --tt-gap: 2.5rem;
+  --tt-here: #e03131; /* the map's you-are-here */
+  --tt-key-line: var(--gray-4);
+  --tt-key-ink: var(--gray-6);
+  --tt-key-down: var(--gray-2);
+  --tt-switch-bg: #fff;
+  --tt-switch-line: var(--gray-5);
+  --tt-switch-knob-on: #fff;
+}
+
+/* Dark mode, as in ../site.css: keep these two blocks in sync. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --tt-here: #ff6b6b;
+    --tt-key-line: var(--gray-7);
+    --tt-key-ink: var(--gray-5);
+    --tt-key-down: var(--gray-8);
+    --tt-switch-bg: var(--paper);
+    --tt-switch-line: var(--gray-6);
+    --tt-switch-knob-on: var(--paper);
+  }
+}
+:root[data-theme="dark"] {
+  --tt-here: #ff6b6b;
+  --tt-key-line: var(--gray-7);
+  --tt-key-ink: var(--gray-5);
+  --tt-key-down: var(--gray-8);
+  --tt-switch-bg: var(--paper);
+  --tt-switch-line: var(--gray-6);
+  --tt-switch-knob-on: var(--paper);
 }
 
 /* Axis tips can poke past the column on phones; never scroll sideways. */
-html { overflow-x: hidden; }
+html {
+  overflow-x: hidden;
+}
 
 .tt-layout {
   max-width: calc(var(--col) + 2rem);
@@ -21,9 +47,7 @@ html { overflow-x: hidden; }
   padding: 2.25rem 1rem 3rem;
 }
 
-/* The title is 16.02em wide: as large as fits on one line, up to 2.5rem.
-   The way back to the main page and the dark mode switch go under it on
-   narrow screens, and to either side of it, on its baseline, on wide ones. */
+/* The title is 16.02em wide: as large as fits on one line, up to 2.5rem. The way back to the main page and the dark mode switch go under it on narrow screens, and to either side of it, on its baseline, on wide ones. */
 .tt-head {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -38,19 +62,35 @@ html { overflow-x: hidden; }
   font-size: min(2.5rem, calc((100vw - 2.5rem) / 16.1));
 }
 .tt-home,
-.tt-theme { font-size: 0.875em; line-height: var(--leading-ui); }
-.tt-home { grid-area: home; justify-self: end; }
-.tt-theme { grid-area: theme; justify-self: start; }
+.tt-theme {
+  font-size: 0.875em;
+  line-height: var(--leading-ui);
+}
+.tt-home {
+  grid-area: home;
+  justify-self: end;
+}
+.tt-theme {
+  grid-area: theme;
+  justify-self: start;
+}
 @media (min-width: 64rem) {
   .tt-head {
     grid-template-columns: 1fr auto 1fr;
     grid-template-areas: "home title theme";
   }
-  .tt-home { justify-self: start; }
-  .tt-theme { justify-self: end; }
+  .tt-home {
+    justify-self: start;
+  }
+  .tt-theme {
+    justify-self: end;
+  }
 }
 
-.tt-main { min-width: 0; }
+.tt-main {
+  position: relative;
+  min-width: 0;
+}
 
 /* The credit, bottom right. */
 .tt-foot {
@@ -69,16 +109,19 @@ html { overflow-x: hidden; }
     max-width: calc(var(--col) + var(--tt-gap) + var(--tt-margin) + 4rem);
     display: grid;
     grid-template-columns: minmax(0, var(--col)) var(--tt-margin);
-    grid-template-areas: "head head" "main margin" "left margin" "foot foot";
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas: "head head" "main margin" "keys keys" "foot foot";
+    grid-template-rows: auto 1fr auto auto;
     column-gap: var(--tt-gap);
     justify-content: center;
     padding: 2.25rem 2rem 3rem;
   }
-  .tt-head { grid-area: head; }
-  .tt-main { grid-area: main; }
-  .tt-left { grid-area: left; }
-  /* polyhedra.js sets margin-top so the list starts level with the graphic. */
+  .tt-head {
+    grid-area: head;
+  }
+  .tt-main {
+    grid-area: main;
+  }
+  /* js/toy.js sets margin-top so the map starts level with the graphic. */
   .tt-margin {
     grid-area: margin;
     position: sticky;
@@ -87,44 +130,94 @@ html { overflow-x: hidden; }
     max-height: calc(100vh - 3rem);
     overflow-y: auto;
   }
+  .tt-margin .tt-map {
+    margin-top: 0;
+  }
+  .tt-margin figcaption {
+    text-align: left;
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
 }
 
-/* Wide: one screen. The map in the left margin, level with the graphic like
-   the symmetries on the right (polyhedra.js sets both margin-tops), the key
-   legend at the bottom of the left margin, and the credit at the bottom of
-   the right one. */
+/* Wide: one screen. The map in the right margin, level with the graphic, the credit at the bottom of it, and the keys along the bottom. */
 @media (min-width: 78rem) {
   .tt-layout {
     max-width: calc(var(--tt-left) + var(--col) + var(--tt-margin) + 2 * var(--tt-gap) + 4rem);
     min-height: 100vh;
     min-height: 100dvh;
     grid-template-columns: var(--tt-left) minmax(0, var(--col)) var(--tt-margin);
-    grid-template-areas: "head head head" "left main margin" "keys main foot";
+    grid-template-areas: "head head head" "left main margin" "keys keys foot";
     grid-template-rows: auto 1fr auto;
     padding: 1.75rem 2rem 1.5rem;
   }
-  .tt-head { margin-bottom: var(--space-m); }
-  .tt-margin { position: static; max-height: none; overflow: visible; }
-  .tt-foot { margin-top: var(--space-s); }
-  .tt-left .tt-map { margin-top: 0; }
-  /* The map gives way first on short screens, so the keys still fit under it. */
-  .tt-left .tt-map-svg { max-height: max(16rem, 100dvh - 21.5rem); }
-  .tt-left figcaption { text-align: left; font-size: 0.75rem; line-height: 1.4; }
+  .tt-head {
+    margin-bottom: var(--space-m);
+  }
+  .tt-margin {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+  .tt-foot {
+    margin-top: var(--space-s);
+  }
+  /* The map gives way first on short screens. */
+  .tt-margin .tt-map-svg {
+    max-height: max(16rem, 100dvh - 21.5rem);
+  }
 }
 
-.tt-fig { margin-top: var(--space-m); }
+/* The title as the family changes (see countTo and wheelWord in js/toy.js): the number counts, its digits all one width, and the word turns on the picker wheel. */
+.tt-count {
+  font-variant-numeric: tabular-nums;
+}
+.tt-count.is-counting {
+  display: inline-flex;
+  justify-content: center;
+}
+.tt-measure {
+  position: absolute;
+  visibility: hidden;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.tt-word-box {
+  display: inline-block;
+  position: relative;
+  white-space: nowrap;
+}
+.tt-word-hold {
+  visibility: hidden;
+}
+.tt-word-part {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+  backface-visibility: hidden;
+}
+
+/* Up and down turn a picker wheel (see wheelBlock in js/toy.js): the family's name and its polyhedra ride on a drum whose axis lies a little behind them (wheelTurn). */
+.tt-wheel,
+.tt-wheel-old {
+  backface-visibility: hidden;
+}
+.tt-wheel-old {
+  position: absolute;
+  margin: 0;
+  pointer-events: none;
+}
+
+.tt-fig {
+  margin-top: var(--space-m);
+}
 
 .tt-family {
   text-align: center;
   color: var(--muted);
   margin-bottom: var(--space-2xs);
-}
-
-.tt-picker {
-  text-align: center;
-  font-size: 0.9375rem;
-  line-height: var(--leading-ui);
-  color: var(--muted);
 }
 
 /* Read aloud, not shown. */
@@ -140,13 +233,13 @@ html { overflow-x: hidden; }
   border: 0;
 }
 
-
 /* The polyhedron, and the carousel around it */
 
-.tt-strip { position: relative; }
+.tt-strip {
+  position: relative;
+}
 
-/* The neighbors are clipped to the column, so on phones the slide comes
-   in from its edge and nothing parked offscreen widens the page. */
+/* The figure going (sliding away, or over the wheel), clipped to the column so nothing offscreen widens the page (but for a family change on a wide screen: see begin in js/toy.js). */
 .tt-ghosts {
   position: absolute;
   inset: 0;
@@ -157,11 +250,73 @@ html { overflow-x: hidden; }
 .tt-ghost {
   position: absolute;
   color: var(--ink);
-  cursor: pointer;
   transform-origin: 50% 50%;
   will-change: transform, opacity, filter;
   visibility: hidden;
 }
+
+/* The figure drawn with WebGL: a canvas over the view box, reaching 64 units (of its 592) past it on every side (see js/gl.js). Copies of it (going, in the carousel) sit in a box the view box's size. */
+.tt-gl {
+  position: absolute;
+  left: -10.8108%;
+  top: -10.8108%;
+  width: 121.6216%;
+  height: 121.6216%;
+  pointer-events: none;
+}
+.tt-glbox {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+/* The figure's own look (its ink, loops, fills and colors) is drawn by the scripts: see js/look.js and the js/draw-*.js modules. */
+
+/* The stage holds the figure, at its size, with a caret either side. */
+.tt-stage {
+  position: relative;
+  width: min(100%, 23rem);
+  margin: 0 auto;
+}
+.tt-toy {
+  position: relative;
+  transform-origin: 50% 50%;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0.5rem;
+  background: none;
+  color: var(--ink);
+  cursor: default;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.tt-toy.is-aiming {
+  cursor: pointer;
+}
+.tt-toy.is-dragging {
+  cursor: grabbing;
+}
+/* One screen: everything above and below the polyhedron takes 17.5rem. A blend's or a pure polyhedron's larger window: the middle column opens up and the figure grows into it, the label still over it and the caption under (see setWide in js/toy.js). */
+@media (min-width: 78rem) {
+  .tt-stage {
+    width: min(100% - 5rem, 28rem, max(15rem, 100dvh - 17.5rem));
+    transition: width 0.55s cubic-bezier(0.333, 0, 0.667, 1);
+  }
+  .tt-layout.is-wide {
+    max-width: none;
+    grid-template-columns: var(--tt-left) minmax(0, 1fr) var(--tt-margin);
+  }
+  .tt-layout.is-wide .tt-stage {
+    width: min(100% - 5rem, 46rem, max(15rem, 100dvh - 15.5rem));
+  }
+}
+
+.tt-toy svg,
 .tt-ghost svg {
   display: block;
   width: 100%;
@@ -169,191 +324,24 @@ html { overflow-x: hidden; }
   overflow: visible;
 }
 
-.tt-toy.is-away { visibility: hidden; }
-
-.tt-toy { position: relative; transform-origin: 50% 50%; }
-.tt-toy .tt-op {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-/* Faces as loops just inside their edges: Petrie polygons, faces being
-   traced, the dual's faces. One hue each, set inline by polyhedra.js. Plain
-   loops are the faces about to be taken away. */
-/* polyhedra.js gives each hue Open Color's own lightness and chroma; these
-   are the averages, for browsers without light-dark(): shade 7, shade 4. */
-:root { --lane-l: 0.633; --lane-c: 0.183; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --lane-l: 0.765; --lane-c: 0.16; }
-}
-:root[data-theme="dark"] { --lane-l: 0.765; --lane-c: 0.16; }
-
-.tt-loop {
-  fill: none;
-  stroke-linecap: round;
-}
-.tt-loop.is-plain { stroke: currentColor; }
-
-/* A Petrial's faces, one swatch each, under the caption. */
-.tt-swatches {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--space-xs);
-  margin-top: var(--space-xs);
-  color: var(--muted);
-}
-.tt-swatches[hidden] { display: none; }
-.tt-swatch-list { display: inline-flex; }
-.tt-swatch {
-  position: relative;
-  width: 1.3rem;
-  height: 1.3rem;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-.tt-swatch::before {
-  content: "";
-  position: absolute;
-  inset: 0.3rem;
-  border-radius: 50%;
-  background: var(--swatch);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.tt-swatch:hover::before { transform: scale(1.25); }
-.tt-swatch[aria-pressed="true"]::before {
-  transform: scale(1.25);
-  box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--swatch);
-}
-.tt-swatch:focus-visible { outline: none; }
-.tt-swatch:focus-visible::before { outline: 2px solid var(--ink); outline-offset: 3px; }
-
-.tt-flag-corner {
-  fill: none;
-  stroke: var(--accent);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.tt-toy {
-  display: block;
-  width: min(100%, 23rem);
-  margin: 0 auto;
-  padding: 0;
-  border: 0;
-  border-radius: 0.5rem;
-  background: none;
-  color: var(--ink);
-  cursor: pointer;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.tt-toy.is-dragging { cursor: grabbing; }
-/* One screen: everything above and below the polyhedron takes 22.4rem. */
-@media (min-width: 78rem) {
-  .tt-toy { width: min(100%, 23rem, max(15rem, 100dvh - 22.6rem)); }
-}
-
-.tt-toy svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
-}
-
-.tt-edge {
-  stroke: currentColor;
-  stroke-linecap: round;
-  fill: none;
-}
-
-.tt-inscribed-edge {
-  stroke: var(--accent);
-  stroke-linecap: round;
-  fill: none;
-}
-
-.tt-flag-chamber {
-  fill: var(--accent);
-  stroke: var(--accent);
-  stroke-width: 4;
-  stroke-linejoin: round;
-}
-
-.tt-outline {
-  stroke: currentColor;
-  stroke-linejoin: round;
-  fill: none;
-}
-
-.tt-face {
-  fill: var(--accent);
-  stroke: var(--accent);
-  stroke-width: 2;
-  stroke-linejoin: round;
-  opacity: 0;
-}
-
-.tt-mirror-disc {
-  fill: var(--accent);
-  fill-opacity: 0.14;
-  stroke: var(--accent);
-  stroke-width: 3;
-  stroke-linejoin: round;
-  opacity: 0;
-}
-
-.tt-axis-line {
-  stroke: var(--accent);
-  stroke-width: 6;
-  stroke-linecap: round;
-}
-
-.tt-axis-inside {
-  stroke: var(--accent);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-dasharray: 1 11;
-}
-
-.tt-pin { fill: var(--accent); }
-.tt-center { fill: var(--accent); }
-
-
-/* Controls: text buttons, like the dark mode switch. */
-
-.tt-controls {
+.tt-noscript {
   margin-top: var(--space-s);
   text-align: center;
-  font-size: 0.875em;
-  line-height: var(--leading-ui);
   color: var(--muted);
 }
 
-.tt-ops-row { margin-top: var(--space-2xs); }
-
-/* An operation's old colored faces go gray while the new ones trace. */
-.tt-lanes .tt-loop { transition: stroke 0.35s ease; }
-.tt-lanes.is-muted .tt-loop { stroke: var(--muted) !important; }
-.tt-trace-fill { stroke: none; }
-
-/* Figure 2, the map of the 18 finite regular polyhedra. */
-:root { --tt-here: #e03131; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --tt-here: #ff6b6b; }
+/* Figure 2, the map of the family. */
+.tt-map {
+  margin-top: var(--space-l);
 }
-:root[data-theme="dark"] { --tt-here: #ff6b6b; }
-
-.tt-map { margin-top: var(--space-l); }
-.tt-map-svg { display: block; width: 100%; max-width: 17rem; height: auto; margin: 0 auto; overflow: visible; }
+.tt-map-svg {
+  display: block;
+  width: 100%;
+  max-width: 17rem;
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
 .tt-map-group {
   font: 400 9.5px var(--sans);
   letter-spacing: 0.1em;
@@ -361,222 +349,295 @@ html { overflow-x: hidden; }
   text-anchor: middle;
   fill: var(--muted);
 }
-.tt-map-node { cursor: pointer; outline: none; }
+.tt-map-node {
+  cursor: pointer;
+  outline: none;
+}
 .tt-map-node text {
   font: 300 13px var(--sans);
   text-anchor: middle;
   dominant-baseline: central;
   fill: var(--ink);
-  transition: fill 0.25s ease;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: fill 0.25s ease, transform 0.12s ease;
 }
-.tt-map-node:hover text { fill: var(--tt-here); }
-.tt-map-node.is-here text { fill: var(--paper); }
-.tt-map-node:focus-visible text { text-decoration: underline; }
-.tt-map-sub { font-size: 9px; }
-.tt-map-drop { fill: var(--tt-here); }
-.tt-map-edge { fill: none; stroke: var(--line); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; }
+.tt-map-node:hover text {
+  fill: var(--tt-here);
+}
+.tt-map-node:active text {
+  transform: scale(0.9);
+  transition-duration: 0.05s;
+}
+.tt-map-node.is-here text {
+  fill: var(--paper);
+}
+.tt-map-node:focus-visible text {
+  text-decoration: underline;
+}
+.tt-map-sub {
+  font-size: 9px;
+}
+.tt-map-drop {
+  fill: var(--tt-here);
+}
+.tt-map-edge {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .tt-map-op {
   font: 400 9px var(--sans);
   letter-spacing: 0.04em;
   fill: var(--muted);
 }
 
-/* Where two Petrie polygons cross, the one underneath has a hairline gap. */
-.tt-cross-gap { stroke: var(--paper); fill: none; stroke-linecap: butt; }
-.tt-cross-top { fill: none; stroke-linecap: butt; }
-
-/* On phones the rows wrap; drop the dots so no line starts with one. */
-@media (max-width: 30rem) {
-  .tt-picker .sep { display: none; }
-  .tt-picker {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-xs) 1.1rem;
-  }
-  .tt-controls {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-xs) 1.1rem;
-  }
-  .tt-controls .sep { display: none; }
-}
-
-/* Like the site's links: warm ink, and on hover the accent underline grows
-   from the middle (see ../site.css); what is switched on keeps it. */
-.tt-btn {
-  --bar-y: calc(0.5lh + 0.54em);
-  font: inherit;
-  color: var(--link);
-  background: linear-gradient(var(--accent), var(--accent)) no-repeat;
-  background-position: 50% var(--bar-y);
-  background-size: 0% 2px;
-  transition: background-size 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-}
-.tt-btn:hover,
-.tt-btn:focus-visible,
-.tt-btn[aria-pressed="true"] { background-size: 100% 2px; }
-.tt-btn[aria-pressed="true"] { font-weight: 400; color: var(--ink); }
-@media (prefers-reduced-motion: reduce) {
-  .tt-btn { transition: none; }
-}
-
-
-/* Figure 2: one dot per group element. */
-
-.tt-elements {
-  display: grid;
-  gap: var(--space-l);
-}
-
-.tt-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-end;
-  gap: var(--space-m) var(--space-l);
-}
-.tt-row[hidden] { display: none; }
-
-.tt-class {
-  display: flex;
-  flex-direction: column;
+/* Carets: faint, gray, quiet until pointed at. Up and down after the title (the family), left and right of the figure (its neighbors). */
+.tt-caret {
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-xs);
-}
-
-.tt-dots {
-  display: grid;
-  grid-template-columns: repeat(var(--cols), 1.05rem);
-  grid-auto-rows: 1.05rem;
-}
-
-.tt-dot {
-  position: relative;
-  width: 1.05rem;
-  height: 1.05rem;
+  justify-content: center;
+  font: inherit;
   padding: 0;
   border: 0;
   background: none;
-  cursor: pointer;
-}
-.tt-dot::before {
-  content: "";
-  position: absolute;
-  inset: 0.22rem;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  transition: background-color 0.3s, border-color 0.3s, transform 0.2s;
-}
-.tt-dot:hover::before { transform: scale(1.3); border-color: var(--ink); }
-.tt-dot.is-visited::before { background: var(--ink); border-color: var(--ink); }
-.tt-dot.is-current::before {
-  background: var(--accent);
-  border-color: var(--accent);
-  transform: scale(1.3);
-}
-.tt-dot:focus-visible { outline: none; }
-.tt-dot:focus-visible::before { outline: 2px solid var(--ink); outline-offset: 2px; }
-
-.tt-class-label {
-  font-size: 0.75rem;
-  line-height: 1.3;
   color: var(--muted);
-  white-space: nowrap;
+  opacity: 0.45;
+  cursor: pointer;
+  transition: opacity 0.15s ease, color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-
-/* In the margin: rotations and the rest as two columns, each a stack of
-   classes with the label above its dots. */
-@media (min-width: 64rem) {
-  .tt-panel { margin: 0; }
-  .tt-elements {
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(0, 1fr);
-    gap: var(--space-m);
-  }
-  .tt-row {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: var(--space-s);
-  }
-  .tt-class { align-items: flex-start; gap: 0.15rem; }
-  .tt-class-label { order: -1; white-space: normal; font-size: 0.6875rem; }
-  .tt-panel figcaption {
-    margin-top: var(--space-m);
-    text-align: left;
-    font-size: 0.75rem;
-    line-height: 1.4;
-  }
+.tt-caret:hover,
+.tt-caret:focus-visible {
+  opacity: 1;
+  color: var(--ink);
+  outline: none;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .tt-dot::before { transition: none; }
-}
-
-
-/* Key legend, at the bottom of the left margin: the keys, no words. Only
-   on wide screens and, presumably, with a keyboard. */
-
-:root {
-  --tt-key-line: var(--gray-4);
-  --tt-key-ink: var(--gray-5);
-  --tt-key-down: var(--gray-2);
-  --tt-key-ink-down: var(--gray-7);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --tt-key-line: var(--gray-7);
-    --tt-key-ink: var(--gray-6);
-    --tt-key-down: var(--gray-8);
-    --tt-key-ink-down: var(--gray-4);
-  }
-}
-:root[data-theme="dark"] {
-  --tt-key-line: var(--gray-7);
-  --tt-key-ink: var(--gray-6);
-  --tt-key-down: var(--gray-8);
-  --tt-key-ink-down: var(--gray-4);
-}
-
-.tt-keys {
-  display: none;
-  grid-area: keys;
-  align-self: end;
-  margin-top: var(--space-s);
-  pointer-events: none;
-}
-.tt-keys svg { display: block; overflow: visible; }
-
-.tt-key rect {
+.tt-caret svg {
+  display: block;
   fill: none;
-  stroke: var(--tt-key-line);
-  stroke-width: 1.25;
-  transition: fill 0.12s ease, stroke 0.12s ease;
-}
-.tt-key path {
-  fill: none;
-  stroke: var(--tt-key-ink);
-  stroke-width: 1.6;
+  stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: stroke 0.12s ease;
+  transition: transform 0.12s ease;
 }
-.tt-key text {
-  fill: var(--tt-key-ink);
-  font: 400 11px var(--sans);
-  text-anchor: middle;
-  transition: fill 0.12s ease;
+/* Pressed (by the pointer, or by its key): it darkens to the accent and gives a little, toward where it points. */
+.tt-caret:active,
+.tt-caret.is-down {
+  opacity: 1;
+  color: var(--accent);
+  transition-duration: 0.05s;
 }
-.tt-key.is-down rect { fill: var(--tt-key-down); stroke: var(--tt-key-ink); }
-.tt-key.is-down path { stroke: var(--tt-key-ink-down); }
-.tt-key.is-down text { fill: var(--tt-key-ink-down); }
+.tt-caret:active svg,
+.tt-caret.is-down svg {
+  transition-duration: 0.05s;
+}
+.tt-prev:active svg,
+.tt-prev.is-down svg {
+  transform: translateX(-3px) scale(0.92);
+}
+.tt-next:active svg,
+.tt-next.is-down svg {
+  transform: translateX(3px) scale(0.92);
+}
+.tt-caret-up:active svg,
+.tt-caret-up.is-down svg {
+  transform: translateY(-2px) scale(0.92);
+}
+.tt-caret-down:active svg,
+.tt-caret-down.is-down svg {
+  transform: translateY(2px) scale(0.92);
+}
 
-@media (min-width: 78rem) and (hover: hover) and (pointer: fine) {
-  .tt-keys { display: block; }
+/* Up and down, stacked, just after the title (which stays centered). */
+.tt-fam-nav {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0.78em;
+  vertical-align: -0.02em;
+}
+.tt-fam-nav .tt-caret {
+  position: absolute;
+  left: 0.42em;
+  width: 0.5em;
+  height: 0.39em;
+  opacity: 0.4;
+}
+.tt-fam-nav .tt-caret-up {
+  top: 0;
+}
+.tt-fam-nav .tt-caret-down {
+  bottom: 0;
+}
+.tt-fam-nav svg {
+  width: 0.42em;
+  height: 0.28em;
+  stroke-width: 1.3;
+}
+
+/* Left and right, just outside the figure (inside its edges on phones). */
+.tt-caret-side {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  width: 2rem;
+  height: 3rem;
+  transform: translateY(-50%);
+}
+.tt-caret-side svg {
+  width: 0.7rem;
+  height: 1.2rem;
+  stroke-width: 1.5;
+}
+.tt-prev {
+  right: 100%;
+  margin-right: 0.5rem;
+}
+.tt-next {
+  left: 100%;
+  margin-left: 0.5rem;
+}
+@media (max-width: 34rem) {
+  .tt-prev {
+    right: auto;
+    left: 0;
+    margin: 0;
+  }
+  .tt-next {
+    left: auto;
+    right: 0;
+    margin: 0;
+  }
+}
+
+/* The keys, in a row along the bottom: each key and what it does. They work as clicks too, for touch screens. */
+
+.tt-keys {
+  grid-area: keys;
+  align-self: end;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem 1.1rem;
+  margin: var(--space-m) 0 0;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--muted);
+}
+@media (min-width: 78rem) {
+  .tt-keys {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    margin-top: var(--space-s);
+  }
+}
+.tt-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.12s ease;
+}
+.tt-hint:hover,
+.tt-hint:focus-visible {
+  color: var(--ink);
+  outline: none;
+}
+.tt-hint[hidden] {
+  display: none;
+}
+.tt-keys kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6em;
+  height: 1.6em;
+  padding: 0 0.3em;
+  border: 1px solid var(--tt-key-line);
+  border-radius: 0.3em;
+  font: inherit;
+  font-size: 0.92em;
+  color: var(--tt-key-ink);
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease, transform 0.12s ease;
+}
+.tt-keys kbd.tt-wide-key {
+  padding: 0 0.7em;
+}
+.tt-keys kbd.is-down,
+.tt-hint:active kbd {
+  background: var(--tt-key-down);
+  border-color: var(--tt-key-ink);
+  color: var(--ink);
+  transform: translateY(1px);
+  transition-duration: 0.05s;
+}
+/* All symmetries (R): a switch, off for the rotations only. */
+.tt-toggle {
+  gap: 0.5em;
+}
+.tt-switch {
+  font-size: 0.8em;
+  position: relative;
+  display: inline-block;
+  width: 3.5em;
+  height: 2em;
+  flex: none;
+}
+.tt-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.tt-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--tt-switch-bg);
+  border: 1px solid var(--tt-switch-line);
+  transition: 0.4s;
+  border-radius: 30px;
+}
+.tt-slider::before {
+  position: absolute;
+  content: "";
+  height: 1.4em;
+  width: 1.4em;
+  border-radius: 20px;
+  left: 0.27em;
+  bottom: 0.25em;
+  background-color: var(--tt-switch-line);
+  transition: 0.4s;
+}
+.tt-switch input:checked+.tt-slider {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+.tt-switch input:focus-visible+.tt-slider {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.tt-switch input:checked+.tt-slider::before {
+  transform: translateX(1.4em);
+  background-color: var(--tt-switch-knob-on);
+}
+.tt-toggle:active .tt-slider::before {
+  width: 1.6em;
+}
+.tt-toggle:active input:checked+.tt-slider::before {
+  transform: translateX(1.2em);
+}
+
+/* A key whose toggle is on: the flag shown, a face picked out. */
+.tt-hint.is-on kbd {
+  border-color: var(--accent);
+  color: var(--accent);
 }

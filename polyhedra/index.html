@@ -3,130 +3,78 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>There are 18 finite regular polyhedra.</title>
+		<title>There are 48 regular polyhedra.</title>
 		<link rel="icon" href="../icons/owl-outline.svg" type="image/svg+xml">
 		<link rel="preload" href="../fonts/national-2-light.woff2" as="font" type="font/woff2" crossorigin>
 		<script src="../js/theme.js"></script>
 		<link rel="stylesheet" href="../site.css">
 		<link rel="stylesheet" href="polyhedra.css">
-		<script src="polyhedra.js" defer></script>
+		<script type="module" src="js/toy.js"></script>
 	</head>
 	<body>
 		<div class="tt-layout">
 			<header class="title-block tt-head" id="top">
-				<h1>There are 18 finite regular polyhedra.</h1>
+				<h1>There are <span class="tt-count">18</span> <span class="tt-kind">finite</span> regular polyhedra.<span class="tt-fam-nav"><button type="button" class="tt-caret tt-caret-up" data-nav="up" aria-label="Previous family"><svg viewBox="0 0 12 8" aria-hidden="true" focusable="false"><path d="M2 6.5 6 2.5l4 4" /></svg></button><button type="button" class="tt-caret tt-caret-down" data-nav="down" aria-label="Next family"><svg viewBox="0 0 12 8" aria-hidden="true" focusable="false"><path d="M2 1.5l4 4 4-4" /></svg></button></span></h1>
 				<p class="tt-home"><a href="../index.html">Evan Angelone</a></p>
 				<p class="tt-theme theme-slot" data-theme-toggle></p>
 			</header>
 			<main class="tt-main" id="content">
 				<p class="tt-family label" id="tt-family">Platonic solids</p>
-				<p class="tt-picker" role="group" aria-labelledby="tt-family"></p>
 				<figure class="fig tt-fig">
-					<!-- The polyhedron, with its neighbors faded to either side. -->
+					<!-- The polyhedron, a caret to either side for its neighbors. -->
 					<div class="tt-strip">
-						<button class="tt-toy" type="button" aria-label="Dodecahedron. Press to apply a random symmetry." aria-describedby="tt-cap">
-						<svg viewBox="-40 -40 592 592" aria-hidden="true" focusable="false">
-						</svg>
-						<!-- Faces being traced by the operations. -->
-						<svg class="tt-op" viewBox="-40 -40 592 592" aria-hidden="true" focusable="false">
-						</svg>
-						</button>
+						<div class="tt-stage">
+							<button type="button" class="tt-caret tt-caret-side tt-prev" data-nav="left" aria-label="Previous polyhedron"><svg viewBox="0 0 8 14" aria-hidden="true" focusable="false"><path d="M6.5 1.5 1.5 7l5 5.5" /></svg></button>
+							<button class="tt-toy" type="button" aria-label="Dodecahedron. Press to apply a random symmetry." aria-describedby="tt-cap">
+								<svg viewBox="-40 -40 592 592" aria-hidden="true" focusable="false">
+								</svg>
+							</button>
+							<button type="button" class="tt-caret tt-caret-side tt-next" data-nav="right" aria-label="Next polyhedron"><svg viewBox="0 0 8 14" aria-hidden="true" focusable="false"><path d="M1.5 1.5 6.5 7l-5 5.5" /></svg></button>
+						</div>
+						<!-- The figure going, as it slides away or turns over on the wheel. -->
 						<div class="tt-ghosts" aria-hidden="true"></div>
 					</div>
 					<figcaption>
-					<span class="fig-label">Figure 1.</span>
-					<span class="cap" id="tt-cap" aria-live="polite">The dodecahedron, {5,&nbsp;3}.</span>
+						<span class="fig-label">Figure 1.</span>
+						<span class="cap" id="tt-cap" aria-live="polite">The dodecahedron, {5,&nbsp;3}.</span>
 					</figcaption>
 					<!-- Each move, and why an operation is refused, for screen readers. -->
 					<p class="tt-sr" id="tt-say" aria-live="polite"></p>
-					<!-- Off the ink: one swatch per face. Hover picks out that face; click keeps it. -->
-					<p class="tt-swatches" hidden>
-						<span class="label">Faces</span>
-						<span class="tt-swatch-list" role="group" aria-label="Pick out one face"></span>
-					</p>
-					<p class="tt-controls">
-						<span role="group" aria-label="Which symmetries">
-							<button type="button" class="tt-btn" data-tt="mode:rotations">Rotations</button>
-							or
-							<button type="button" class="tt-btn" data-tt="mode:all">all symmetries</button>
-						</span>
-						<span class="sep" aria-hidden="true">&middot;</span>
-						<button type="button" class="tt-btn" data-tt="flag">Flag</button>
-						<span class="sep" aria-hidden="true">&middot;</span>
-						<button type="button" class="tt-btn" data-tt="autoplay">Autoplay</button>
-					</p>
-					<!-- Operations on the polyhedron (also the P, D and F keys). -->
-					<p class="tt-controls tt-ops-row" role="group" aria-label="Operations">
-						<button type="button" class="tt-btn" data-tt="op:petrial">Petrial</button>
-						<span class="sep" aria-hidden="true">&middot;</span>
-						<button type="button" class="tt-btn" data-tt="op:dual">Dual</button>
-						<span class="sep" aria-hidden="true">&middot;</span>
-						<button type="button" class="tt-btn" data-tt="op:facet">Facetting</button>
-					</p>
-					<noscript><p class="tt-controls">This page needs JavaScript.</p></noscript>
+					<noscript>
+						<p class="tt-noscript">This page needs JavaScript.</p>
+					</noscript>
 				</figure>
 			</main>
-			<!-- Where you are among the 18 finite regular polyhedra: the left margin on wide screens, below the figure otherwise. -->
-			<aside class="tt-left" aria-label="Map">
+			<!-- The keys, in a row along the bottom. Each also works as a click. -->
+			<p class="tt-keys" role="group" aria-label="Keys">
+				<button type="button" class="tt-hint" data-act="left right"><kbd data-key="ArrowLeft">&larr;</kbd><kbd data-key="ArrowRight">&rarr;</kbd> polyhedron</button>
+				<button type="button" class="tt-hint" data-act="up down"><kbd data-key="ArrowUp">&uarr;</kbd><kbd data-key="ArrowDown">&darr;</kbd> family</button>
+				<button type="button" class="tt-hint" data-act="random"><kbd data-key="space" class="tt-wide-key">space</kbd> random symmetry</button>
+				<label class="tt-hint tt-toggle"><span class="tt-switch"><input type="checkbox" class="tt-mode-input"><span class="tt-slider"></span></span>all symmetries</label>
+				<button type="button" class="tt-hint" data-act="petrial"><kbd data-key="p">P</kbd> Petrial</button>
+				<button type="button" class="tt-hint" data-act="dual"><kbd data-key="d">D</kbd> dual</button>
+				<button type="button" class="tt-hint" data-act="facet" data-only="facet"><kbd data-key="f">F</kbd> facetting</button>
+				<button type="button" class="tt-hint" data-act="halve" data-only="pure"><kbd data-key="h">H</kbd> halving</button>
+				<button type="button" class="tt-hint" data-act="skew" data-only="pure"><kbd data-key="s">S</kbd> skewing</button>
+				<button type="button" class="tt-hint" data-act="blend" data-only="blend"><kbd data-key="b">B</kbd> blend with a segment</button>
+				<button type="button" class="tt-hint" data-act="blend-line" data-only="blend"><kbd data-key="B">&#8679;B</kbd> with a line</button>
+				<button type="button" class="tt-hint" data-act="flag"><kbd data-key="F">&#8679;F</kbd> flag</button>
+				<button type="button" class="tt-hint" data-act="face" data-mac><kbd data-key="ctrl-f">&#8963;F</kbd> a face</button>
+			</p>
+			<!-- Where you are among the polyhedra of the family: the right margin on wide screens, below the figure otherwise. -->
+			<aside class="tt-margin" aria-label="Map">
 				<figure class="fig tt-map">
 					<svg class="tt-map-svg" viewBox="0 0 260 404" role="group" aria-labelledby="tt-map-cap">
 					</svg>
 					<figcaption>
-					<span class="fig-label">Figure 2.</span>
-					<span class="cap" id="tt-map-cap">You are here, in red, among the 18 finite regular polyhedra, after McMullen and Schulte. P is the Petrial, D the dual, and F the facetting (<i>R</i><sub>0</sub>, <i>R</i><sub>1</sub>, <i>R</i><sub>2</sub>) &#8614; (<i>R</i><sub>0</sub>, <i>R</i><sub>1</sub><i>R</i><sub>2</sub><i>R</i><sub>1</sub>, <i>R</i><sub>2</sub>). Click a polyhedron to go there.</span>
-					</figcaption>
-				</figure>
-			</aside>
-			<!-- The group, in the right margin on wide screens, below the figure otherwise. -->
-			<aside class="tt-margin" aria-label="Symmetries">
-				<figure class="fig tt-panel">
-					<div class="tt-elements" id="tt-elements"></div>
-					<figcaption>
-					<span class="fig-label">Figure 3.</span>
-					<span class="cap" id="tt-status"></span>
+						<span class="fig-label">Figure 2.</span>
+						<span class="cap" id="tt-map-cap">You are here, in red, among the 18 finite regular polyhedra, after McMullen and Schulte. P is the Petrial, D the dual, and F the facetting (<i>R</i><sub>0</sub>, <i>R</i><sub>1</sub>, <i>R</i><sub>2</sub>) &#8614; (<i>R</i><sub>0</sub>, <i>R</i><sub>1</sub><i>R</i><sub>2</sub><i>R</i><sub>1</sub>, <i>R</i><sub>2</sub>). Click a polyhedron to go there.</span>
 					</figcaption>
 				</figure>
 			</aside>
 			<footer class="tt-foot">
 				<p>Vibecoded with Claude.</p>
 			</footer>
-			<!-- Key legend, under the map: arrows change solid (left, right) and family (up, down); the space bar applies a random symmetry; P, D and F take the Petrial, the dual and the facetting. -->
-			<div class="tt-keys" role="img" aria-label="Keys: left and right arrows change the solid, up and down arrows change the family, the space bar applies a random symmetry, P takes the Petrial, D the dual, and F the facetting.">
-				<svg viewBox="0 0 172 50" width="172" height="50" aria-hidden="true" focusable="false">
-					<g class="tt-key" data-key="p">
-						<rect x="1" y="1" width="22" height="22" rx="5"/>
-						<text x="12" y="16.5">P</text>
-					</g>
-					<g class="tt-key" data-key="d">
-						<rect x="27" y="1" width="22" height="22" rx="5"/>
-						<text x="38" y="16.5">D</text>
-					</g>
-					<g class="tt-key" data-key="f">
-						<rect x="53" y="1" width="22" height="22" rx="5"/>
-						<text x="64" y="16.5">F</text>
-					</g>
-					<g class="tt-key" data-key="space">
-						<rect x="1" y="27" width="86" height="22" rx="5"/>
-						<path d="M30 35v6h28v-6"/>
-					</g>
-					<g class="tt-key" data-key="ArrowLeft">
-						<rect x="95" y="27" width="22" height="22" rx="5"/>
-						<path d="M111 38h-10m4-4-4 4 4 4"/>
-					</g>
-					<g class="tt-key" data-key="ArrowDown">
-						<rect x="121" y="27" width="22" height="22" rx="5"/>
-						<path d="M132 33v10m-4-4 4 4 4-4"/>
-					</g>
-					<g class="tt-key" data-key="ArrowRight">
-						<rect x="147" y="27" width="22" height="22" rx="5"/>
-						<path d="M153 38h10m-4-4 4 4-4 4"/>
-					</g>
-					<g class="tt-key" data-key="ArrowUp">
-						<rect x="121" y="1" width="22" height="22" rx="5"/>
-						<path d="M132 17V7m-4 4 4-4 4 4"/>
-					</g>
-				</svg>
-			</div>
 		</div>
 	</body>
 </html>
